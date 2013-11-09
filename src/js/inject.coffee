@@ -66,18 +66,5 @@ if location.host == 'twitter.com'
       unless location.href == oldLocation
         oldLocation = location.href
         addObserver()
-    , 1000
+    , 500
   )()
-
-  # history.onpushstate = ->
-  #   console.log 'state changed'
-
-  # ((history) ->
-  #   pushState = history.pushState
-  #   history.pushState = (state) ->
-  #     history.onpushstate state: state  if typeof history.onpushstate is "function"
-
-  #     # ... whatever else you want to do
-  #     # maybe call onhashchange e.handler
-  #     pushState.apply history, arguments
-  # ) window.history

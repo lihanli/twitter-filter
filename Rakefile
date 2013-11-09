@@ -11,6 +11,7 @@ end
 
 def build_css
   compile_scss('inject')
+  compile_scss('options')
   puts 'css built'
 end
 

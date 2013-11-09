@@ -3,19 +3,18 @@
   var Settings;
 
   Settings = (function() {
-    function Settings(sendResponse) {
-      this.sendResponse = sendResponse;
+    function Settings(_sendResponse) {
+      this._sendResponse = _sendResponse;
     }
 
-    Settings.prototype.getFilteredUsers = function() {
-      return this.sendResponse({
-        filteredUsers: util.getFromLocalStorage('filteredUsers')
+    Settings.prototype.filteredUsers = function(filteredUsers) {
+      if (filteredUsers != null) {
+        util.putInLocalStorage('filteredUsers', filteredUsers);
+        return util.defaultResponse(this._sendResponse);
+      }
+      return this._sendResponse({
+        filteredUsers: util.getFromLocalStorage('filteredUsers') || []
       });
-    };
-
-    Settings.prototype.setFilteredUsers = function(filteredUsers) {
-      util.putInLocalStorage('filteredUsers', filteredUsers);
-      return util.defaultResponse(this.sendResponse);
     };
 
     return Settings;

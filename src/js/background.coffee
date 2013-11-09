@@ -1,12 +1,12 @@
 class Settings
-  constructor: (@sendResponse) ->
+  constructor: (@_sendResponse) ->
 
-  getFilteredUsers: ->
-    @sendResponse(filteredUsers: util.getFromLocalStorage('filteredUsers'))
+  filteredUsers: (filteredUsers) ->
+    if filteredUsers?
+      util.putInLocalStorage('filteredUsers', filteredUsers)
+      return util.defaultResponse(@_sendResponse)
 
-  setFilteredUsers: (filteredUsers) ->
-    util.putInLocalStorage('filteredUsers', filteredUsers)
-    util.defaultResponse(@sendResponse)
+    @_sendResponse(filteredUsers: util.getFromLocalStorage('filteredUsers') || [])
 
 chrome.extension.onMessage.addListener (req, __, sendResponse) ->
   settings = new Settings(sendResponse)

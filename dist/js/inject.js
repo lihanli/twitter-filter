@@ -77,7 +77,7 @@
           oldLocation = location.href;
           return addObserver();
         }
-      }, 1000);
+      }, 500);
     })();
   }
 
