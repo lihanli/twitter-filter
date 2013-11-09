@@ -1,7 +1,7 @@
 if location.host == 'twitter.com'
   rclass = /[\n\t]/g
   observer = null
-  blocked = ['_hermit_thrush_']
+  blocked = ['_hermit_thrush_', 'leh0n']
 
   hasClass = (el, selector) ->
     className = " " + selector + " "
@@ -17,7 +17,7 @@ if location.host == 'twitter.com'
       mutations.forEach (mutation) ->
         {addedNodes} = mutation
         if addedNodes.length > 0 && hasClass(addedNodes[0], 'stream-item')
-          console.log 'FOUND'
+          filterTweets(addedNodes)
 
     observer.observe target,
       childList: true
@@ -26,9 +26,29 @@ if location.host == 'twitter.com'
 
   filterTweets = (els) ->
     $els = $(els)
+    toHide = []
+
     $els.find('.tweet').each ->
       $this = $(@)
-      $this.data('screen-name').toLowerCase() == bloc
+
+      unless _.indexOf(blocked, $this.data('screen-name').toLowerCase()) == -1
+        toHide.push($this)
+
+    _.each toHide, (el) ->
+      replacement = $("""
+        <div>
+          This tweet has been filtered. <a>Show?</a>
+        </div>
+      """)
+
+      replacement.find('a').click ->
+        el.show()
+        replacement.remove()
+
+      el.hide().after(replacement)
+
+
+  filterTweets(document.querySelectorAll('.stream-items li'))
 
   (->
     oldLocation = location.href

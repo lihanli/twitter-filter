@@ -28,11 +28,17 @@ end
 task watch: [:build] do
   require 'listen'
 
-  %w(css js).each do |type|
-    Listen.to("src/#{type}") do |modified, added, removed|
-      send("build_#{type}")
-    end.start
-  end
+  Listen.to('src') do |modified, added, removed|
+    %w(modified added removed).each do |type|
+      eval(type).each do |file|
+        if file.match(/.scss$/)
+          build_css
+        else
+          build_js
+        end
+      end
+    end
+  end.start
 
   sleep 10 while true
 end

@@ -5,7 +5,7 @@
   if (location.host === 'twitter.com') {
     rclass = /[\n\t]/g;
     observer = null;
-    blocked = ['_hermit_thrush_'];
+    blocked = ['_hermit_thrush_', 'leh0n'];
     hasClass = function(el, selector) {
       var className;
       className = " " + selector + " ";
@@ -25,7 +25,7 @@
           var addedNodes;
           addedNodes = mutation.addedNodes;
           if (addedNodes.length > 0 && hasClass(addedNodes[0], 'stream-item')) {
-            return console.log('FOUND');
+            return filterTweets(addedNodes);
           }
         });
       });
@@ -35,14 +35,27 @@
     };
     addObserver();
     filterTweets = function(els) {
-      var $els;
+      var $els, toHide;
       $els = $(els);
-      return $els.find('.tweet').each(function() {
+      toHide = [];
+      $els.find('.tweet').each(function() {
         var $this;
         $this = $(this);
-        return $this.data('screen-name').toLowerCase() === bloc;
+        if (_.indexOf(blocked, $this.data('screen-name').toLowerCase()) !== -1) {
+          return toHide.push($this);
+        }
+      });
+      return _.each(toHide, function(el) {
+        var replacement;
+        replacement = $("<div>\n  This tweet has been filtered. <a>Show?</a>\n</div>");
+        replacement.find('a').click(function() {
+          el.show();
+          return replacement.remove();
+        });
+        return el.hide().after(replacement);
       });
     };
+    filterTweets(document.querySelectorAll('.stream-items li'));
     (function() {
       var oldLocation;
       oldLocation = location.href;
