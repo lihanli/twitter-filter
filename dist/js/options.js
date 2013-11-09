@@ -42,14 +42,20 @@
   chrome.extension.sendMessage({
     filteredUsers: null
   }, function(res) {
-    twitterUsers = new TwitterUsers(convertToBackboneArr(TwitterUser, res.filteredUsers));
+    twitterUsers = new TwitterUsers();
     twitterUsers.on('add', function(twitterUser, collection) {
       var el;
       el = $("<li>\n  @" + (_.escape(twitterUser.get('screenName'))) + "\n  <a class=\"close\">&times;</a>\n</li>").data('model', twitterUser);
       return dom.filteredUsers.append(el);
     });
-    return twitterUsers.on('remove', function(twitterUser, __, opt) {
+    twitterUsers.on('remove', function(twitterUser, __, opt) {
       return $(dom.filteredUsers.find('li')[opt.index]).remove();
+    });
+    twitterUsers.add(convertToBackboneArr(TwitterUser, res.filteredUsers));
+    return twitterUsers.on('change reset add remove', function(__, collection) {
+      return chrome.extension.sendMessage({
+        filteredUsers: collection.toJSON()
+      });
     });
   });
 

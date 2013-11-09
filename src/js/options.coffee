@@ -8,6 +8,7 @@ TwitterUser = Backbone.Model.extend
 
 TwitterUsers = Backbone.Collection.extend
   model: TwitterUser
+
   add: (twitterUser) ->
     return false if this.any (_twitterUser) ->
       _twitterUser.get('screenName') == twitterUser.get('screenName')
@@ -24,7 +25,7 @@ removeByIndex = (collection, idx) ->
   collection.remove(collection.models[idx])
 
 chrome.extension.sendMessage filteredUsers: null, (res) ->
-  twitterUsers = new TwitterUsers(convertToBackboneArr(TwitterUser, res.filteredUsers))
+  twitterUsers = new TwitterUsers()
 
   twitterUsers.on 'add', (twitterUser, collection) ->
     el = $("""
@@ -38,6 +39,11 @@ chrome.extension.sendMessage filteredUsers: null, (res) ->
 
   twitterUsers.on 'remove', (twitterUser, __, opt) ->
     $(dom.filteredUsers.find('li')[opt.index]).remove()
+
+  twitterUsers.add(convertToBackboneArr(TwitterUser, res.filteredUsers))
+
+  twitterUsers.on 'change reset add remove', (__, collection) ->
+    chrome.extension.sendMessage(filteredUsers: collection.toJSON())
 
 dom.filteredUsers.on 'click', '.close', ->
   el = $(@).parents('li')

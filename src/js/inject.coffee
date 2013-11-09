@@ -1,7 +1,7 @@
 if location.host == 'twitter.com'
   rclass = /[\n\t]/g
   observer = null
-  blocked = ['_hermit_thrush_', 'leh0n']
+  filteredUsers = []
 
   class Tweet
     constructor: ($el) ->
@@ -36,7 +36,7 @@ if location.host == 'twitter.com'
       $this = $(@)
       tweet = new Tweet($this)
 
-      unless _.indexOf(blocked, tweet.screenName.toLowerCase()) == -1
+      if _.findWhere(filteredUsers, screenName: tweet.screenName.toLowerCase())
         toHide.push
           el: $this.find('.content')
           tweet: tweet
@@ -56,8 +56,9 @@ if location.host == 'twitter.com'
 
       el.hide().after(replacement)
 
-
-  filterTweets(document.querySelectorAll('.stream-items li'))
+  chrome.extension.sendMessage filteredUsers: null, (res) ->
+    {filteredUsers} = res
+    filterTweets(document.querySelectorAll('.stream-items li'))
 
   (->
     oldLocation = location.href
