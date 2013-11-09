@@ -3,6 +3,10 @@ if location.host == 'twitter.com'
   observer = null
   blocked = ['_hermit_thrush_', 'leh0n']
 
+  class Tweet
+    constructor: ($el) ->
+      @screenName = $el.data('screen-name')
+
   hasClass = (el, selector) ->
     className = " " + selector + " "
     return true  if (" " + el.className + " ").replace(rclass, " ").indexOf(className) > -1
@@ -30,14 +34,19 @@ if location.host == 'twitter.com'
 
     $els.find('.tweet').each ->
       $this = $(@)
+      tweet = new Tweet($this)
 
-      unless _.indexOf(blocked, $this.data('screen-name').toLowerCase()) == -1
-        toHide.push($this.find('.content'))
+      unless _.indexOf(blocked, tweet.screenName.toLowerCase()) == -1
+        toHide.push
+          el: $this.find('.content')
+          tweet: tweet
 
-    _.each toHide, (el) ->
+    _.each toHide, (hideObj) ->
+      {el} = hideObj
+
       replacement = $("""
         <div class="hidden-message">
-          This tweet has been filtered. <a>Show?</a>
+          #{_.escape(hideObj.tweet.screenName)}'s tweet has been filtered. <a>Show?</a>
         </div>
       """)
 
