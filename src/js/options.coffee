@@ -27,6 +27,7 @@ chrome.extension.sendMessage filteredUsers: null, (res) ->
     dom.filteredUsers.append """
       <li>
         @#{_.escape(twitterUser.get('screenName'))}
+        <a class="close">&times;</a>
       </li>
     """
 

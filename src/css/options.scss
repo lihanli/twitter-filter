@@ -1,3 +1,15 @@
 input[type="text"] {
   width: 200px;
 }
+
+.filtered-user-input {
+  margin-bottom: 15px;
+}
+
+.filtered-users {
+  li {
+    .close {
+      float: none;
+    }
+  }
+}

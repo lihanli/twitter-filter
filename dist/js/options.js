@@ -40,7 +40,7 @@
   }, function(res) {
     twitterUsers = new TwitterUsers(convertToBackboneArr(TwitterUser, res.filteredUsers));
     return twitterUsers.on('add', function(twitterUser, collection) {
-      return dom.filteredUsers.append("<li>\n  @" + (_.escape(twitterUser.get('screenName'))) + "\n</li>");
+      return dom.filteredUsers.append("<li>\n  @" + (_.escape(twitterUser.get('screenName'))) + "\n  <a class=\"close\">&times;</a>\n</li>");
     });
   });
 
