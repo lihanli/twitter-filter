@@ -42,12 +42,12 @@
         var $this;
         $this = $(this);
         if (_.indexOf(blocked, $this.data('screen-name').toLowerCase()) !== -1) {
-          return toHide.push($this);
+          return toHide.push($this.find('.content'));
         }
       });
       return _.each(toHide, function(el) {
         var replacement;
-        replacement = $("<div>\n  This tweet has been filtered. <a>Show?</a>\n</div>");
+        replacement = $("<div class=\"hidden-message\">\n  This tweet has been filtered. <a>Show?</a>\n</div>");
         replacement.find('a').click(function() {
           el.show();
           return replacement.remove();

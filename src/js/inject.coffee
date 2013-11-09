@@ -32,11 +32,11 @@ if location.host == 'twitter.com'
       $this = $(@)
 
       unless _.indexOf(blocked, $this.data('screen-name').toLowerCase()) == -1
-        toHide.push($this)
+        toHide.push($this.find('.content'))
 
     _.each toHide, (el) ->
       replacement = $("""
-        <div>
+        <div class="hidden-message">
           This tweet has been filtered. <a>Show?</a>
         </div>
       """)
