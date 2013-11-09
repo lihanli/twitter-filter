@@ -1,6 +1,5 @@
 if location.host == 'twitter.com'
   rclass = /[\n\t]/g
-  observer = null
   filteredUsers = []
 
   class Tweet
@@ -12,21 +11,8 @@ if location.host == 'twitter.com'
     return true  if (" " + el.className + " ").replace(rclass, " ").indexOf(className) > -1
     false
 
-  addObserver = ->
-    target = document.querySelector('.stream-items')
-
-    observer.disconnect() if observer
-
-    observer = new MutationObserver (mutations) ->
-      mutations.forEach (mutation) ->
-        {addedNodes} = mutation
-        if addedNodes.length > 0 && hasClass(addedNodes[0], 'stream-item')
-          filterTweets(addedNodes)
-
-    observer.observe target,
-      childList: true
-
-  addObserver()
+  filterCurrentPage = ->
+    filterTweets(document.querySelectorAll('.stream-items li'))
 
   filterTweets = (els) ->
     $els = $(els)
@@ -58,14 +44,30 @@ if location.host == 'twitter.com'
 
   chrome.extension.sendMessage filteredUsers: null, (res) ->
     {filteredUsers} = res
-    filterTweets(document.querySelectorAll('.stream-items li'))
+    filterCurrentPage()
 
   (->
-    oldLocation = location.href
+    observer = null
 
+    addObserver = ->
+      observer.disconnect() if observer
+
+      observer = new MutationObserver (mutations) ->
+        mutations.forEach (mutation) ->
+          {addedNodes} = mutation
+          if addedNodes.length > 0 && hasClass(addedNodes[0], 'stream-item')
+            filterTweets(addedNodes)
+
+      observer.observe document.querySelector('.stream-items'),
+        childList: true
+
+    addObserver()
+
+    oldLocation = location.href
     setInterval ->
       unless location.href == oldLocation
         oldLocation = location.href
+        filterCurrentPage()
         addObserver()
     , 500
   )()
