@@ -1,0 +1,16 @@
+{
+  "name": "twitter-filter",
+  "version": "0.0.0",
+  "authors": [
+    "Lihan Li <frankieteardrop@gmail.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*"
+  ],
+  "dependencies": {
+    "jquery": "~2.0.3",
+    "underscore": "latest"
+  }
+}
