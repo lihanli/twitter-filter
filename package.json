@@ -1,0 +1,8 @@
+{
+  "name": "twitter-filter",
+  "version": "0.0.1",
+  "private": true,
+  "devDependencies": {
+    "coffee-script":  "=1.6.3"
+  }
+}
