@@ -14,6 +14,7 @@
 
   "background": {
     "scripts": [
+      "dist/js/util.js",
       "dist/js/background.js"
     ]
   },
@@ -38,6 +39,7 @@
       "js": [
         "bower_components/underscore/underscore.js",
         "bower_components/jquery/jquery.js",
+        "dist/js/util.js",
         "dist/js/inject.js"
       ]
     }

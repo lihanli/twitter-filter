@@ -1,17 +1,11 @@
 require 'rake/testtask'
 
-def compile_coffee(name, append = false)
-  `node_modules/.bin/coffee -p -c src/js/#{name}.coffee #{append ? '>>' : '>'} dist/js/#{name}.js`
-end
-
 def compile_scss(name)
   `sass -r sass-css-importer src/css/#{name}.scss dist/css/#{name}.css`
 end
 
 def build_js
-  %w(background inject).each do |file|
-    compile_coffee(file)
-  end
+  `node_modules/.bin/coffee -o dist/js -c src/js`
   puts 'js built'
 end
 
