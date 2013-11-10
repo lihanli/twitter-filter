@@ -17,7 +17,7 @@
       events: {
         add: function(twitterUser, collection) {
           var el;
-          el = $("<li>\n  @" + (_.escape(twitterUser.get('screenName'))) + "\n  <a class=\"close\">&times;</a>\n</li>").data('model', twitterUser);
+          el = $("<li>\n  <span class=\"screen-name\">@" + (_.escape(twitterUser.get('screenName'))) + "</span>\n  <a class=\"close\">&times;</a>\n</li>").data('model', twitterUser);
           return dom.filteredUsers.append(el);
         },
         remove: function(twitterUser, __, opt) {

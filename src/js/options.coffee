@@ -11,7 +11,7 @@ chrome.extension.sendMessage filteredUsers: null, (res) ->
       add: (twitterUser, collection) ->
         el = $("""
           <li>
-            @#{_.escape(twitterUser.get('screenName'))}
+            <span class="screen-name">@#{_.escape(twitterUser.get('screenName'))}</span>
             <a class="close">&times;</a>
           </li>
         """).data('model', twitterUser)
