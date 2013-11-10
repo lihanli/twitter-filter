@@ -27,9 +27,9 @@ dom.filteredUsers.on 'click', '.close', ->
 
 dom.filteredUserInput.keypress (e) ->
   if e.keyCode == 13
-    screenName = $.trim(dom.filteredUserInput.val()).replace(/\W/g, '')
+    twitterUser = new models.TwitterUser(screenName: dom.filteredUserInput.val())
 
-    return if util.isBlank(screenName)
+    return unless twitterUser.isValid()
 
-    twitterUsers.add(new models.TwitterUser(screenName: screenName))
+    twitterUsers.add(twitterUser)
     dom.filteredUserInput.val('')

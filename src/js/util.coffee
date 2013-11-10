@@ -37,7 +37,11 @@ root.util =
 root.models =
   TwitterUser: Backbone.Model.extend
     initialize: ->
-      @.set(screenName: @.get('screenName').toLowerCase())
+      @.set
+        screenName: $.trim(@.get('screenName')).replace(/\W/g, '').toLowerCase()
+
+    validate: ->
+      return "screenName can't be blank" if util.isBlank(@.get('screenName'))
 
   TwitterUsers: Backbone.Collection.extend
     model: @TwitterUser

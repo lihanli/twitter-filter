@@ -57,8 +57,13 @@
     TwitterUser: Backbone.Model.extend({
       initialize: function() {
         return this.set({
-          screenName: this.get('screenName').toLowerCase()
+          screenName: $.trim(this.get('screenName')).replace(/\W/g, '').toLowerCase()
         });
+      },
+      validate: function() {
+        if (util.isBlank(this.get('screenName'))) {
+          return "screenName can't be blank";
+        }
       }
     }),
     TwitterUsers: Backbone.Collection.extend({

@@ -34,15 +34,15 @@
   });
 
   dom.filteredUserInput.keypress(function(e) {
-    var screenName;
+    var twitterUser;
     if (e.keyCode === 13) {
-      screenName = $.trim(dom.filteredUserInput.val()).replace(/\W/g, '');
-      if (util.isBlank(screenName)) {
+      twitterUser = new models.TwitterUser({
+        screenName: dom.filteredUserInput.val()
+      });
+      if (!twitterUser.isValid()) {
         return;
       }
-      twitterUsers.add(new models.TwitterUser({
-        screenName: screenName
-      }));
+      twitterUsers.add(twitterUser);
       return dom.filteredUserInput.val('');
     }
   });
