@@ -30,7 +30,7 @@ if location.host == 'twitter.com'
         </a>
       """)
 
-      if _.findWhere(filteredUsers, screenName: tweet.screenName.toLowerCase())
+      if filteredUsers.findWhere(screenName: tweet.screenName.toLowerCase())
         toHide.push
           el: $this.find('.content')
           tweet: tweet
@@ -51,7 +51,8 @@ if location.host == 'twitter.com'
       el.hide().after(replacement)
 
   chrome.extension.sendMessage filteredUsers: null, (res) ->
-    {filteredUsers} = res
+    filteredUsers = util.generateTwitterUsers
+      users: res.filteredUsers
     filterCurrentPage()
 
   (->

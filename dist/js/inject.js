@@ -33,7 +33,7 @@
         $this = $(this);
         tweet = new Tweet($this);
         $this.find('.account-group').after("<a class=\"toggle-hide\">\n  Hide\n</a>");
-        if (_.findWhere(filteredUsers, {
+        if (filteredUsers.findWhere({
           screenName: tweet.screenName.toLowerCase()
         })) {
           return toHide.push({
@@ -56,7 +56,9 @@
     chrome.extension.sendMessage({
       filteredUsers: null
     }, function(res) {
-      filteredUsers = res.filteredUsers;
+      filteredUsers = util.generateTwitterUsers({
+        users: res.filteredUsers
+      });
       return filterCurrentPage();
     });
     (function() {
