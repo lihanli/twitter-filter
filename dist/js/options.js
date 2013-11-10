@@ -15,7 +15,7 @@
     return filteredUsers = util.generateTwitterUsers({
       users: res.filteredUsers,
       events: {
-        add: function(twitterUser, collection) {
+        add: function(twitterUser) {
           var el;
           el = $("<li>\n  <span class=\"screen-name\">@" + (_.escape(twitterUser.get('screenName'))) + "</span>\n  <a class=\"close\">&times;</a>\n</li>").data('model', twitterUser);
           return dom.filteredUsers.append(el);

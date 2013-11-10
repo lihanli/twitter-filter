@@ -34,6 +34,10 @@ class CapybaraTestCase < MiniTest::Unit::TestCase
     refresh # have to refresh or chrome apis dont work??
   end
 
+  def clear_filtered_users
+    all('.filtered-users .close').each(&:click)
+  end
+
   def add_filtered_user(name)
     set_input_and_press_enter(find('.filtered-user-input'), name)
   end

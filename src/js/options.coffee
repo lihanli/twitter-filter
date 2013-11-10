@@ -8,7 +8,7 @@ chrome.extension.sendMessage filteredUsers: null, (res) ->
   filteredUsers = util.generateTwitterUsers
     users: res.filteredUsers
     events:
-      add: (twitterUser, collection) ->
+      add: (twitterUser) ->
         el = $("""
           <li>
             <span class="screen-name">@#{_.escape(twitterUser.get('screenName'))}</span>

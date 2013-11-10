@@ -7,6 +7,8 @@ class OptionsTest < CapybaraTestCase
 
   def test
     visit_options_page
+    clear_filtered_users
+
     # empty usernames don't get added
     add_filtered_user(' <> ')
     assert_equal(0, user_count)
