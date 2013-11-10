@@ -32,6 +32,7 @@
         var $this, tweet;
         $this = $(this);
         tweet = new Tweet($this);
+        $this.find('.account-group').after("<a class=\"toggle-hide\">\n  Hide\n</a>");
         if (_.findWhere(filteredUsers, {
           screenName: tweet.screenName.toLowerCase()
         })) {

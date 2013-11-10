@@ -15,12 +15,20 @@ if location.host == 'twitter.com'
     filterTweets(document.querySelectorAll('.stream-items li'))
 
   filterTweets = (els) ->
+    # every time the page changes without a full reload
+    # all the elements stay the same but the previously set click handlers and data attributes get wiped out
     $els = $(els)
     toHide = []
 
     $els.find('.tweet').each ->
       $this = $(@)
       tweet = new Tweet($this)
+
+      $this.find('.account-group').after("""
+        <a class="toggle-hide">
+          Hide
+        </a>
+      """)
 
       if _.findWhere(filteredUsers, screenName: tweet.screenName.toLowerCase())
         toHide.push
