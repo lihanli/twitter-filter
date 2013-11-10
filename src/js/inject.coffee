@@ -1,6 +1,6 @@
 if location.host == 'twitter.com'
   rclass = /[\n\t]/g
-  filteredUsers = []
+  filteredUsers = null
 
   class Tweet
     constructor: ($el) ->

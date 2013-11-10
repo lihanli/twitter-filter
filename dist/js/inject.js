@@ -4,7 +4,7 @@
 
   if (location.host === 'twitter.com') {
     rclass = /[\n\t]/g;
-    filteredUsers = [];
+    filteredUsers = null;
     Tweet = (function() {
       function Tweet($el) {
         this.screenName = $el.data('screen-name');

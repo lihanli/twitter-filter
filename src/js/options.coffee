@@ -2,10 +2,10 @@ dom =
   filteredUserInput: $('.filtered-user-input')
   filteredUsers: $('.filtered-users')
 
-twitterUsers = null
+filteredUsers = null
 
 chrome.extension.sendMessage filteredUsers: null, (res) ->
-  twitterUsers = util.generateTwitterUsers
+  filteredUsers = util.generateTwitterUsers
     users: res.filteredUsers
     events:
       add: (twitterUser, collection) ->
@@ -23,7 +23,7 @@ chrome.extension.sendMessage filteredUsers: null, (res) ->
 
 dom.filteredUsers.on 'click', '.close', ->
   el = $(@).parents('li')
-  twitterUsers.remove(el.data('model'))
+  filteredUsers.remove(el.data('model'))
 
 dom.filteredUserInput.keypress (e) ->
   if e.keyCode == 13
@@ -31,5 +31,5 @@ dom.filteredUserInput.keypress (e) ->
 
     return unless twitterUser.isValid()
 
-    twitterUsers.add(twitterUser)
+    filteredUsers.add(twitterUser)
     dom.filteredUserInput.val('')
