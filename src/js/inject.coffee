@@ -24,22 +24,28 @@ if location.host == 'twitter.com'
       $this = $(@)
       tweet = new Tweet($this)
 
+      # remove previous changes
+      $this.show()
+      $this.find('.content').show()
+      $this.find('.tf-el').remove()
+
       $this.find('.account-group').after("""
-        <a class="toggle-hide">
+        <a class="toggle-hide tf-el">
           Hide
         </a>
       """)
 
       if filteredUsers.findWhere(screenName: tweet.screenName.toLowerCase())
         toHide.push
-          el: $this.find('.content')
+          el: $this
           tweet: tweet
 
     _.each toHide, (hideObj) ->
       {el} = hideObj
+      el = el.find('.content')
 
       replacement = $("""
-        <div class="hidden-message">
+        <div class="hidden-message tf-el">
           #{_.escape(hideObj.tweet.screenName)}'s tweet has been filtered. <a>Show?</a>
         </div>
       """)

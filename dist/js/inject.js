@@ -32,12 +32,15 @@
         var $this, tweet;
         $this = $(this);
         tweet = new Tweet($this);
-        $this.find('.account-group').after("<a class=\"toggle-hide\">\n  Hide\n</a>");
+        $this.show();
+        $this.find('.content').show();
+        $this.find('.tf-el').remove();
+        $this.find('.account-group').after("<a class=\"toggle-hide tf-el\">\n  Hide\n</a>");
         if (filteredUsers.findWhere({
           screenName: tweet.screenName.toLowerCase()
         })) {
           return toHide.push({
-            el: $this.find('.content'),
+            el: $this,
             tweet: tweet
           });
         }
@@ -45,7 +48,8 @@
       return _.each(toHide, function(hideObj) {
         var el, replacement;
         el = hideObj.el;
-        replacement = $("<div class=\"hidden-message\">\n  " + (_.escape(hideObj.tweet.screenName)) + "'s tweet has been filtered. <a>Show?</a>\n</div>");
+        el = el.find('.content');
+        replacement = $("<div class=\"hidden-message tf-el\">\n  " + (_.escape(hideObj.tweet.screenName)) + "'s tweet has been filtered. <a>Show?</a>\n</div>");
         replacement.find('a').click(function() {
           el.show();
           return replacement.remove();
