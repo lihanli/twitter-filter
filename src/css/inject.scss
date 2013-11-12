@@ -8,3 +8,17 @@
 a {
   cursor: pointer;
 }
+
+.tweet {
+  .toggle-hide {
+    font-size: 12px;
+    color: rgb(221, 221, 221);
+  }
+
+  &:hover {
+    .toggle-hide {
+      color: rgb(153, 153, 153);
+    }
+  }
+}
+
