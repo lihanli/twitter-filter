@@ -49,11 +49,10 @@
     options: null
   }, function(res) {
     var options;
-    options = new models.Options();
+    options = new models.Options(res.options);
     options.on('renderAll change:hideCompletely', function() {
       return dom.hideCompletely.prop('checked', this.get('hideCompletely'));
     });
-    options.set(res.options);
     options.trigger('renderAll');
     options.on('change', function() {
       return util.saveToBg('options', options);

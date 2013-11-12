@@ -34,13 +34,11 @@ chrome.extension.sendMessage filteredUsers: null, (res) ->
       dom.filteredUserInput.val('')
 
 chrome.extension.sendMessage options: null, (res) ->
-  options = new models.Options()
+  options = new models.Options(res.options)
 
   options.on 'renderAll change:hideCompletely', ->
     dom.hideCompletely.prop('checked', @.get('hideCompletely'))
 
-  options.set(res.options)
-  # always render so that default options get rendered
   options.trigger('renderAll')
 
   options.on 'change', ->
