@@ -37,4 +37,8 @@
     }
   };
 
+  if (root.$) {
+    $('[data-toggle="tooltip"]').tooltip();
+  }
+
 }).call(this);

@@ -23,3 +23,6 @@ root.util =
     req = {}
     req[key] = model.toJSON()
     chrome.extension.sendMessage(req)
+
+if root.$
+  $('[data-toggle="tooltip"]').tooltip()
