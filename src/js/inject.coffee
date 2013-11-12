@@ -90,25 +90,30 @@ if location.host == 'twitter.com'
 
         $el.hide().after(replacement)
 
-  (->
-    filteredUsersDeferred = $.Deferred()
-    optionsDeferred = $.Deferred()
+  chrome.extension.sendMessage options: null, (res) ->
+    options = new models.Options(res.options)
 
-    chrome.extension.sendMessage filteredUsers: null, (res) ->
-      filteredUsers = models.generateTwitterUsers
-        users: res.filteredUsers
-        anyChangeCb: ->
-          filterCurrentPage()
+    if options.get('enable')
+      pageWatcher()
 
-      filteredUsersDeferred.resolve()
+      chrome.extension.sendMessage filteredUsers: null, (res) ->
+        filteredUsers = models.generateTwitterUsers
+          users: res.filteredUsers
+          anyChangeCb: ->
+            filterCurrentPage()
 
-    chrome.extension.sendMessage options: null, (res) ->
-      options = new models.Options(res.options)
-      optionsDeferred.resolve()
+        setupPage()
 
-    $.when(filteredUsersDeferred, optionsDeferred).then ->
-      setupPage()
-  )()
+  pageWatcher = ->
+    oldLocation = location.href
+
+    setInterval ->
+      newLocation = location.href
+      unless newLocation == oldLocation
+        oldLocation = newLocation
+
+        setupPage()
+    , 500
 
   setupPage = (->
     observer = null
@@ -144,13 +149,4 @@ if location.host == 'twitter.com'
       filterCurrentPage()
   )()
 
-  (->
-    oldLocation = location.href
-    setInterval ->
-      newLocation = location.href
-      unless newLocation == oldLocation
-        oldLocation = newLocation
 
-        setupPage()
-    , 500
-  )()
