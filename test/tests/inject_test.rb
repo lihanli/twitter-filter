@@ -44,11 +44,17 @@ class InjectTest < CapybaraTestCase
     click('.delete-action')
     wait_until { all('.tweet').size == 1 }
 
+    # change pages and test that click handler still works
     send_keyboard_shortcut('gp')
     wait_until { current_path == "/#{@twitter_user[:screen_name]}" }
     send_keyboard_shortcut('gh')
     wait_until { current_path == '/' }
     click_show_tweet
     assert_text_include('dog dog', find('.tweet'))
+
+    visit_options_page
+    click('.hide-completely')
+    visit('http://twitter.com')
+    assert_has_no_css('.tweet')
   end
 end
