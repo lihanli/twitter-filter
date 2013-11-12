@@ -1,9 +1,8 @@
 if location.host == 'twitter.com'
+  # can't cache dom elements because they become invalid when user changes pages
   rclass = /[\n\t]/g
   filteredUsers = null
   options = null
-  dom =
-    streamContainer: $('.stream-container')
 
   class Tweet
     constructor: ($el) ->
@@ -22,6 +21,7 @@ if location.host == 'twitter.com'
 
   filterCurrentPage = ->
     filterTweets(document.querySelectorAll('.stream-items li'))
+
 
   filterTweets = (els) ->
     # every time the page changes without a full reload
@@ -72,15 +72,6 @@ if location.host == 'twitter.com'
 
         $el.hide().after(replacement)
 
-  dom.streamContainer.on 'click', '.tweet .toggle-hide', ->
-    tweet = Tweet.getCachedTweet($(this).parents('.tweet'))
-
-    if tweet.hidden
-      filteredUsers.remove(filteredUsers.findByScreenName(tweet.screenName))
-    else
-      if confirm("Are you sure you want to hide all of #{tweet.screenName}'s tweets?")
-        filteredUsers.add(new models.TwitterUser(tweet.data()))
-
   (->
     filteredUsersDeferred = $.Deferred()
     optionsDeferred = $.Deferred()
@@ -116,13 +107,27 @@ if location.host == 'twitter.com'
       observer.observe document.querySelector('.stream-items'),
         childList: true
 
-    addObserver()
+    addClickHandlers = ->
+      $('.stream-container').on 'click', '.tweet .toggle-hide', ->
+        tweet = Tweet.getCachedTweet($(this).parents('.tweet'))
+
+        if tweet.hidden
+          filteredUsers.remove(filteredUsers.findByScreenName(tweet.screenName))
+        else
+          if confirm("Hide all of #{tweet.screenName}'s tweets? This won't unfollow or block him/her.")
+            filteredUsers.add(new models.TwitterUser(tweet.data()))
+
+    setupPage = ->
+      addObserver()
+      addClickHandlers()
+
+    setupPage()
 
     oldLocation = location.href
     setInterval ->
       unless location.href == oldLocation
         oldLocation = location.href
         filterCurrentPage()
-        addObserver()
+        setupPage()
     , 500
   )()
