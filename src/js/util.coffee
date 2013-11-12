@@ -26,6 +26,3 @@ root.util =
 
   highlight: ($el) ->
     $el.effect('highlight', { color: '#A9F5BC' }, 500)
-
-if root.$
-  $('[data-toggle="tooltip"]').tooltip()

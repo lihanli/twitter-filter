@@ -61,3 +61,4 @@ chrome.extension.sendMessage options: null, (res) ->
   dom.hideCompletely.change ->
     options.set(hideCompletely: dom.hideCompletely.prop('checked'))
 
+$('[data-toggle="tooltip"]').tooltip()

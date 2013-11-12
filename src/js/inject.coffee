@@ -2,10 +2,22 @@ if location.host == 'twitter.com'
   rclass = /[\n\t]/g
   filteredUsers = null
   options = null
+  dom =
+    streamContainer: $('.stream-container')
 
-  class Tweet
-    constructor: ($el) ->
-      @screenName = $el.data('screen-name')
+  getTweetData = (->
+    class Tweet
+      constructor: ($el) ->
+        @screenName = $el.data('screen-name')
+
+    ($el) ->
+      tweet = $el.data('tf-tweet')
+      return tweet if tweet
+
+      tweet = new Tweet($el)
+      $el.data('tf-tweet', tweet)
+      return tweet
+  )()
 
   hasClass = (el, selector) ->
     className = " " + selector + " "
@@ -23,7 +35,7 @@ if location.host == 'twitter.com'
 
     $els.find('.tweet').each ->
       $this = $(@)
-      tweet = new Tweet($this)
+      tweet = getTweetData($this)
 
       # remove previous changes
       $this.show()
@@ -38,28 +50,33 @@ if location.host == 'twitter.com'
 
       if filteredUsers.findWhere(screenName: tweet.screenName.toLowerCase())
         toHide.push
-          el: $this
-          tweet: tweet
+          $el: $this
 
     _.each toHide, (hideObj) ->
-      {el} = hideObj
+      {$el} = hideObj
+      tweet = getTweetData($el)
 
       if options.get('hideCompletely')
-        el.hide()
+        $el.hide()
       else
-        el = el.find('.content')
+        $el = $el.find('.content')
 
         replacement = $("""
           <div class="hidden-message tf-el">
-            #{_.escape(hideObj.tweet.screenName)}'s tweet has been filtered. <a>Show?</a>
+            #{_.escape(tweet.screenName)}'s tweet has been filtered. <a>Show?</a>
           </div>
         """)
 
         replacement.find('a').click ->
-          el.show()
+          $el.show()
           replacement.remove()
 
-        el.hide().after(replacement)
+        $el.hide().after(replacement)
+
+  dom.streamContainer.on 'click', '.tweet .toggle-hide', ->
+    tweet = $(this).parents('.tweet').data('tf-tweet')
+    if confirm("Are you sure you want to hide all of #{tweet.screenName}'s tweets?")
+      console.log 'foo'
 
   (->
     filteredUsersDeferred = $.Deferred()
