@@ -34,9 +34,29 @@
       return filterTweets(document.querySelectorAll('.stream-items li'));
     };
     filterTweets = function(els) {
-      var $els, toHide;
+      var $els, hideCompletely, removeConversationModule, toHide;
       $els = $(els);
       toHide = [];
+      hideCompletely = options.get('hideCompletely');
+      removeConversationModule = function($el) {
+        return $el.parents('ol.conversation-module').removeClass('conversation-module');
+      };
+      if (hideCompletely) {
+        _.each(['.missing-tweets-bar', '.conversation-header'], function(klass) {
+          return $els.find(klass).each(function() {
+            var $this, screenName;
+            $this = $(this);
+            $this.show();
+            screenName = models.TwitterUser.sanitizeScreenName($this.find('a').attr('href').split('/')[1]);
+            if (filteredUsers.findWhere({
+              screenName: screenName
+            })) {
+              $this.hide();
+              return removeConversationModule($this);
+            }
+          });
+        });
+      }
       $els.find('.tweet').each(function() {
         var $this, tweet;
         $this = $(this);
@@ -59,8 +79,9 @@
         var $el, replacement, tweet;
         $el = hideObj.$el;
         tweet = Tweet.getCachedTweet($el);
-        if (options.get('hideCompletely')) {
-          return $el.hide();
+        if (hideCompletely) {
+          $el.hide();
+          return removeConversationModule($el);
         } else {
           $el = $el.find('.content');
           replacement = $("<div class=\"hidden-message tf-el\">\n  " + (_.escape(tweet.screenName)) + "'s tweet has been filtered. <a>Show?</a>\n</div>");

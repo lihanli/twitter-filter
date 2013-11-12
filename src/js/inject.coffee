@@ -27,6 +27,24 @@ if location.host == 'twitter.com'
     # all the elements stay the same but the previously set click handlers and data attributes get wiped out
     $els = $(els)
     toHide = []
+    hideCompletely = options.get('hideCompletely')
+
+    removeConversationModule = ($el) ->
+      # remove the blue lines
+      $el.parents('ol.conversation-module').removeClass('conversation-module')
+
+    if hideCompletely
+      # hide the conversation module things for filtered users
+      _.each ['.missing-tweets-bar', '.conversation-header'], (klass) ->
+        $els.find(klass).each ->
+          $this = $(@)
+          # remove previous changes
+          $this.show()
+
+          screenName = models.TwitterUser.sanitizeScreenName($this.find('a').attr('href').split('/')[1])
+          if filteredUsers.findWhere(screenName: screenName)
+            $this.hide()
+            removeConversationModule($this)
 
     $els.find('.tweet').each ->
       $this = $(@)
@@ -54,8 +72,9 @@ if location.host == 'twitter.com'
       {$el} = hideObj
       tweet = Tweet.getCachedTweet($el)
 
-      if options.get('hideCompletely')
+      if hideCompletely
         $el.hide()
+        removeConversationModule($el)
       else
         $el = $el.find('.content')
 
