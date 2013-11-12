@@ -1,6 +1,7 @@
 if location.host == 'twitter.com'
   rclass = /[\n\t]/g
   filteredUsers = null
+  options = null
 
   class Tweet
     constructor: ($el) ->
@@ -42,24 +43,40 @@ if location.host == 'twitter.com'
 
     _.each toHide, (hideObj) ->
       {el} = hideObj
-      el = el.find('.content')
 
-      replacement = $("""
-        <div class="hidden-message tf-el">
-          #{_.escape(hideObj.tweet.screenName)}'s tweet has been filtered. <a>Show?</a>
-        </div>
-      """)
+      if options.get('hideCompletely')
+        el.hide()
+      else
+        el = el.find('.content')
 
-      replacement.find('a').click ->
-        el.show()
-        replacement.remove()
+        replacement = $("""
+          <div class="hidden-message tf-el">
+            #{_.escape(hideObj.tweet.screenName)}'s tweet has been filtered. <a>Show?</a>
+          </div>
+        """)
 
-      el.hide().after(replacement)
+        replacement.find('a').click ->
+          el.show()
+          replacement.remove()
 
-  chrome.extension.sendMessage filteredUsers: null, (res) ->
-    filteredUsers = models.generateTwitterUsers
-      users: res.filteredUsers
-    filterCurrentPage()
+        el.hide().after(replacement)
+
+  (->
+    filteredUsersDeferred = $.Deferred()
+    optionsDeferred = $.Deferred()
+
+    chrome.extension.sendMessage filteredUsers: null, (res) ->
+      filteredUsers = models.generateTwitterUsers
+        users: res.filteredUsers
+      filteredUsersDeferred.resolve()
+
+    chrome.extension.sendMessage options: null, (res) ->
+      options = new models.Options(res.options)
+      optionsDeferred.resolve()
+
+    $.when(filteredUsersDeferred, optionsDeferred).then ->
+      filterCurrentPage()
+  )()
 
   (->
     observer = null
