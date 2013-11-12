@@ -9,3 +9,6 @@ input[type="text"] {
 
 .filtered-users li .close {
   float: none; }
+
+.hidden-light {
+  display: none; }

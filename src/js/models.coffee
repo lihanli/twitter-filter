@@ -32,5 +32,6 @@ window.models =
 
     twitterUsers.on 'change reset add remove', (__, collection) ->
       util.saveToBg('filteredUsers', collection)
+      opt.anyChangeCb() if opt.anyChangeCb
 
     twitterUsers

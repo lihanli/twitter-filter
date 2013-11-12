@@ -2,10 +2,21 @@ dom =
   filteredUserInput: $('.filtered-user-input')
   filteredUsers: $('.filtered-users')
   hideCompletely: $('.hide-completely')
+  alertsBox: $('.alerts-box')
+
+showSettingsSaved = ->
+  alertEl = $("""
+    <div class="alert alert-success">
+      <span class="glyphicon glyphicon-ok"></span> Settings have been saved, reload page to see changes.
+    </div>
+  """).delay(5000).fadeOut('slow')
+
+  dom.alertsBox.html(alertEl)
 
 chrome.extension.sendMessage filteredUsers: null, (res) ->
   filteredUsers = models.generateTwitterUsers
     users: res.filteredUsers
+    anyChangeCb: showSettingsSaved
     events:
       add: (twitterUser) ->
         el = $("""
@@ -43,6 +54,7 @@ chrome.extension.sendMessage options: null, (res) ->
 
   options.on 'change', ->
     util.saveToBg('options', options)
+    showSettingsSaved()
 
   dom.hideCompletely.change ->
     options.set(hideCompletely: dom.hideCompletely.prop('checked'))
