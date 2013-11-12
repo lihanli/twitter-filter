@@ -45,9 +45,7 @@
       }
       twitterUsers.add(util.convertToBackboneArr(this.TwitterUser, opt.users));
       twitterUsers.on('change reset add remove', function(__, collection) {
-        return chrome.extension.sendMessage({
-          filteredUsers: collection.toJSON()
-        });
+        return util.saveToBg('filteredUsers', collection);
       });
       return twitterUsers;
     }

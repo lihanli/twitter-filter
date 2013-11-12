@@ -18,3 +18,8 @@ root.util =
   convertToBackboneArr: (Model, arr) ->
     _.map arr, (item) ->
       new Model(item)
+
+  saveToBg: (key, model) ->
+    req = {}
+    req[key] = model.toJSON()
+    chrome.extension.sendMessage(req)

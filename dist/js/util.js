@@ -28,6 +28,12 @@
       return _.map(arr, function(item) {
         return new Model(item);
       });
+    },
+    saveToBg: function(key, model) {
+      var req;
+      req = {};
+      req[key] = model.toJSON();
+      return chrome.extension.sendMessage(req);
     }
   };
 

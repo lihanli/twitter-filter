@@ -31,6 +31,6 @@ window.models =
     twitterUsers.add(util.convertToBackboneArr(@TwitterUser, opt.users))
 
     twitterUsers.on 'change reset add remove', (__, collection) ->
-      chrome.extension.sendMessage(filteredUsers: collection.toJSON())
+      util.saveToBg('filteredUsers', collection)
 
     twitterUsers
