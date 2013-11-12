@@ -22,7 +22,6 @@ if location.host == 'twitter.com'
   filterCurrentPage = ->
     filterTweets(document.querySelectorAll('.stream-items li'))
 
-
   filterTweets = (els) ->
     # every time the page changes without a full reload
     # all the elements stay the same but the previously set click handlers and data attributes get wiped out
@@ -89,10 +88,10 @@ if location.host == 'twitter.com'
       optionsDeferred.resolve()
 
     $.when(filteredUsersDeferred, optionsDeferred).then ->
-      filterCurrentPage()
+      setupPage()
   )()
 
-  (->
+  setupPage = (->
     observer = null
 
     addObserver = ->
@@ -117,17 +116,22 @@ if location.host == 'twitter.com'
           if confirm("Hide all of #{tweet.screenName}'s tweets? This won't unfollow or block him/her.")
             filteredUsers.add(new models.TwitterUser(tweet.data()))
 
-    setupPage = ->
+    ->
+      path = location.pathname
+      return if path == '/mentions' || path == '/i/connect'
+
       addObserver()
       addClickHandlers()
+      filterCurrentPage()
+  )()
 
-    setupPage()
-
+  (->
     oldLocation = location.href
     setInterval ->
-      unless location.href == oldLocation
-        oldLocation = location.href
-        filterCurrentPage()
+      newLocation = location.href
+      unless newLocation == oldLocation
+        oldLocation = newLocation
+
         setupPage()
     , 500
   )()
