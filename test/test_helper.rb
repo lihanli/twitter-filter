@@ -38,6 +38,10 @@ class CapybaraTestCase < MiniTest::Unit::TestCase
     all('.filtered-users .close').each(&:click)
   end
 
+  def assert_settings_saved_alert
+    assert_text_include('saved', find('.alert-success'))
+  end
+
   def add_filtered_user(name)
     set_input_and_press_enter(find('.filtered-user-input'), name)
   end

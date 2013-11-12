@@ -54,6 +54,8 @@ class InjectTest < CapybaraTestCase
 
     visit_options_page
     click('.hide-completely')
+    assert_settings_saved_alert
+
     visit('http://twitter.com')
     assert_has_no_css('.tweet')
   end

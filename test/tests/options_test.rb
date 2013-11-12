@@ -16,7 +16,7 @@ class OptionsTest < CapybaraTestCase
     # input cleared after successful input
     assert_equal('', get_val('.filtered-user-input'))
     # shows saved alert
-    assert_text_include('saved', find('.alert-success'))
+    assert_settings_saved_alert
     # whitespace gets trimmed
     assert_text('@dog', find('.screen-name'))
     # test close button
