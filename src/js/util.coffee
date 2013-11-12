@@ -34,21 +34,26 @@ root.util =
 
     twitterUsers
 
-root.models =
-  TwitterUser: Backbone.Model.extend
-    initialize: ->
-      @.set
-        screenName: $.trim(@.get('screenName')).replace(/\W/g, '').toLowerCase()
+if Backbone?
+  root.models =
+    TwitterUser: Backbone.Model.extend
+      initialize: ->
+        console.log arguments
+        @.set
+          screenName: $.trim(@.get('screenName')).replace(/\W/g, '').toLowerCase()
 
-    validate: ->
-      return "screenName can't be blank" if util.isBlank(@.get('screenName'))
+      validate: ->
+        return "screenName can't be blank" if util.isBlank(@.get('screenName'))
 
-  TwitterUsers: Backbone.Collection.extend
-    model: @TwitterUser
+    TwitterUsers: Backbone.Collection.extend
+      model: @TwitterUser
 
-    add: (twitterUser) ->
-      return false if this.any (_twitterUser) ->
-        _twitterUser.get('screenName') == twitterUser.get('screenName')
+      add: (twitterUser) ->
+        return false if this.any (_twitterUser) ->
+          _twitterUser.get('screenName') == twitterUser.get('screenName')
 
-      Backbone.Collection.prototype.add.apply(this, arguments)
+        Backbone.Collection.prototype.add.apply(this, arguments)
 
+    Options: Backbone.Model.extend
+      defaults:
+        hideCompletely: false

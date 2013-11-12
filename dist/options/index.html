@@ -1,13 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Twitter filter</title>
+	<title>Twitter filter options</title>
   <link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap.css" />
   <link rel="stylesheet" href="../css/options.css" />
 </head>
 <body>
   <div class="container">
-    <h1>Twitter filter</h1>
+    <h1>Twitter filter options</h1>
+
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" value="hideCompletely">
+        Hide tweets completely
+      </label>
+    </div>
 
     <h3>Filtered users</h3>
     <input class="form-control filtered-user-input" type="text" placeholder="Add user" />
@@ -18,6 +25,7 @@
 
   <script src="../../bower_components/underscore/underscore.js"></script>
   <script src="../../bower_components/jquery/jquery.js"></script>
+  <script src="../../bower_components/bootstrap/dist/js/bootstrap.js"></script>
   <script src="../../bower_components/backbone/backbone.js"></script>
   <script src="../js/util.js"></script>
   <script src="../js/options.js"></script>

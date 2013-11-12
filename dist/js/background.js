@@ -7,19 +7,27 @@
       this._sendResponse = _sendResponse;
     }
 
-    Settings.prototype.filteredUsers = function(filteredUsers) {
-      if (filteredUsers != null) {
-        util.putInLocalStorage('filteredUsers', filteredUsers);
-        return util.defaultResponse(this._sendResponse);
-      }
-      return this._sendResponse({
-        filteredUsers: util.getFromLocalStorage('filteredUsers') || []
-      });
-    };
-
     return Settings;
 
   })();
+
+  _.each({
+    filteredUsers: [],
+    options: {}
+  }, function(defaultValue, key) {
+    return Settings.prototype[key] = function(newData) {
+      if (newData != null) {
+        util.putInLocalStorage(key, newData);
+        return util.defaultResponse(this._sendResponse);
+      }
+      return (function() {
+        var res;
+        res = {};
+        res[key] = util.getFromLocalStorage(key) || defaultValue;
+        return this._sendResponse(res);
+      }).apply(this, arguments);
+    };
+  });
 
   chrome.extension.onMessage.addListener(function(req, __, sendResponse) {
     var k, settings, v, _results;

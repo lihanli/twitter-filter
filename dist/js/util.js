@@ -53,30 +53,38 @@
     }
   };
 
-  root.models = {
-    TwitterUser: Backbone.Model.extend({
-      initialize: function() {
-        return this.set({
-          screenName: $.trim(this.get('screenName')).replace(/\W/g, '').toLowerCase()
-        });
-      },
-      validate: function() {
-        if (util.isBlank(this.get('screenName'))) {
-          return "screenName can't be blank";
+  if (typeof Backbone !== "undefined" && Backbone !== null) {
+    root.models = {
+      TwitterUser: Backbone.Model.extend({
+        initialize: function() {
+          console.log(arguments);
+          return this.set({
+            screenName: $.trim(this.get('screenName')).replace(/\W/g, '').toLowerCase()
+          });
+        },
+        validate: function() {
+          if (util.isBlank(this.get('screenName'))) {
+            return "screenName can't be blank";
+          }
         }
-      }
-    }),
-    TwitterUsers: Backbone.Collection.extend({
-      model: this.TwitterUser,
-      add: function(twitterUser) {
-        if (this.any(function(_twitterUser) {
-          return _twitterUser.get('screenName') === twitterUser.get('screenName');
-        })) {
-          return false;
+      }),
+      TwitterUsers: Backbone.Collection.extend({
+        model: this.TwitterUser,
+        add: function(twitterUser) {
+          if (this.any(function(_twitterUser) {
+            return _twitterUser.get('screenName') === twitterUser.get('screenName');
+          })) {
+            return false;
+          }
+          return Backbone.Collection.prototype.add.apply(this, arguments);
         }
-        return Backbone.Collection.prototype.add.apply(this, arguments);
-      }
-    })
-  };
+      }),
+      Options: Backbone.Model.extend({
+        defaults: {
+          hideCompletely: false
+        }
+      })
+    };
+  }
 
 }).call(this);
