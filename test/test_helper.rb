@@ -46,6 +46,11 @@ class CapybaraTestCase < MiniTest::Unit::TestCase
     set_input_and_press_enter(find('.filtered-user-input'), name)
   end
 
+  def confirm_accept(expected_msg = false)
+    assert_equal(expected_msg, page.driver.browser.switch_to.alert.text)
+    page.driver.browser.switch_to.alert.accept
+  end
+
   def set_input_and_press_enter(el, val)
     el.set(val)
     el.native.send_keys(:return)

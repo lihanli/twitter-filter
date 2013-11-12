@@ -14,6 +14,14 @@ class InjectTest < CapybaraTestCase
     all_with_wait('.hidden-message')[idx].find('a').click
   end
 
+  def assert_first_tweet_filtered
+    wait_until { first('.tweet').text == "#{@twitter_user[:screen_name]}'s tweet has been filtered. Show?" }
+  end
+
+  def assert_tweet_not_filtered
+    assert_text_include('dog dog', find('.tweet'))
+  end
+
   def test
     visit_options_page
     # empty usernames don't get added
@@ -24,20 +32,16 @@ class InjectTest < CapybaraTestCase
     sleep 2 # who to follow popup will occassionally trigger mutation
 
     # tweet filtered
-    lambda do
-      filtered_text = "josephk92264943's tweet has been filtered. Show?"
+    assert_first_tweet_filtered
+    click_show_tweet
+    assert_tweet_not_filtered
 
-      assert_text(filtered_text, find('.tweet'))
-      click_show_tweet
-      assert_text_include('dog dog', find('.tweet'))
-
-      # make new tweet
-      click('#global-new-tweet-button')
-      has_css?('#tweet-box-global', visible: true)
-      page.execute_script("jQuery('#tweet-box-global').text('hello')")
-      click('.tweet-action')
-      wait_until { first('.tweet').text == filtered_text }
-    end.()
+    # make new tweet
+    click('#global-new-tweet-button')
+    has_css?('#tweet-box-global', visible: true)
+    page.execute_script("jQuery('#tweet-box-global').text('hello')")
+    click('.tweet-action')
+    assert_first_tweet_filtered
 
     click_show_tweet
     first('.js-action-del').click
@@ -50,8 +54,21 @@ class InjectTest < CapybaraTestCase
     send_keyboard_shortcut('gh')
     wait_until { current_path == '/' }
     click_show_tweet
-    assert_text_include('dog dog', find('.tweet'))
+    assert_tweet_not_filtered
 
+    lambda do
+      toggle_hide_el = find('.toggle-hide')
+
+      assert_text('Unhide', toggle_hide_el)
+      toggle_hide_el.click
+      assert_text('Hide', toggle_hide_el)
+
+      toggle_hide_el.click
+      confirm_accept("Hide all of #{@twitter_user[:screen_name]}'s tweets? This won't unfollow or block him/her.")
+      assert_first_tweet_filtered
+    end.()
+
+    # test hide completely
     visit_options_page
     click('.hide-completely')
     assert_settings_saved_alert
