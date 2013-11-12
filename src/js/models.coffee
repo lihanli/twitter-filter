@@ -22,6 +22,7 @@ window.models =
   Options: Backbone.Model.extend
     defaults:
       hideCompletely: false
+      enable: true
 
   generateTwitterUsers: (opt = {}) ->
     opt.events = {} unless opt.events?

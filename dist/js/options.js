@@ -5,8 +5,10 @@
   dom = {
     filteredUserInput: $('.filtered-user-input'),
     filteredUsers: $('.filtered-users'),
-    hideCompletely: $('.hide-completely'),
-    alertsBox: $('.alerts-box')
+    hideCompletelyInput: $('.hide-completely-input'),
+    alertsBox: $('.alerts-box'),
+    optionsBox: $('.options-box'),
+    enableInput: $('.enable-input')
   };
 
   showSettingsSaved = function() {
@@ -58,20 +60,33 @@
   chrome.extension.sendMessage({
     options: null
   }, function(res) {
-    var options;
+    var checkBoxes, options;
     options = new models.Options(res.options);
-    options.on('renderAll change:hideCompletely', function() {
-      return dom.hideCompletely.prop('checked', this.get('hideCompletely'));
+    checkBoxes = {
+      hideCompletely: null,
+      enable: function(val) {
+        return dom.optionsBox[val ? 'show' : 'hide']();
+      }
+    };
+    _.each(checkBoxes, function(cb, attr) {
+      var $el;
+      $el = dom["" + attr + "Input"];
+      options.on("renderAll change:" + attr, function() {
+        var val;
+        val = this.get(attr);
+        $el.prop('checked', val);
+        if (cb) {
+          return cb(val);
+        }
+      });
+      return $el.change(function() {
+        return options.set(attr, $el.prop('checked'));
+      });
     });
     options.trigger('renderAll');
-    options.on('change', function() {
+    return options.on('change', function() {
       util.saveToBg('options', options);
       return showSettingsSaved();
-    });
-    return dom.hideCompletely.change(function() {
-      return options.set({
-        hideCompletely: dom.hideCompletely.prop('checked')
-      });
     });
   });
 

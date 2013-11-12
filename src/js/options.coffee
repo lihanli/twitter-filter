@@ -1,8 +1,10 @@
 dom =
   filteredUserInput: $('.filtered-user-input')
   filteredUsers: $('.filtered-users')
-  hideCompletely: $('.hide-completely')
+  hideCompletelyInput: $('.hide-completely-input')
   alertsBox: $('.alerts-box')
+  optionsBox: $('.options-box')
+  enableInput: $('.enable-input')
 
 showSettingsSaved = ->
   alertEl = $("""
@@ -48,17 +50,26 @@ chrome.extension.sendMessage filteredUsers: null, (res) ->
 
 chrome.extension.sendMessage options: null, (res) ->
   options = new models.Options(res.options)
+  checkBoxes =
+    hideCompletely: null
+    enable: (val) ->
+      dom.optionsBox[if val then 'show' else 'hide']()
 
-  options.on 'renderAll change:hideCompletely', ->
-    dom.hideCompletely.prop('checked', @.get('hideCompletely'))
+  _.each checkBoxes, (cb, attr) ->
+    $el = dom["#{attr}Input"]
+
+    options.on "renderAll change:#{attr}", ->
+      val = @.get(attr)
+      $el.prop('checked', val)
+      cb(val) if cb
+
+    $el.change ->
+      options.set(attr, $el.prop('checked'))
 
   options.trigger('renderAll')
 
   options.on 'change', ->
     util.saveToBg('options', options)
     showSettingsSaved()
-
-  dom.hideCompletely.change ->
-    options.set(hideCompletely: dom.hideCompletely.prop('checked'))
 
 $('[data-toggle="tooltip"]').tooltip()

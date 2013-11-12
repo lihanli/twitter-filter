@@ -31,7 +31,8 @@
     }),
     Options: Backbone.Model.extend({
       defaults: {
-        hideCompletely: false
+        hideCompletely: false,
+        enable: true
       }
     }),
     generateTwitterUsers: function(opt) {
