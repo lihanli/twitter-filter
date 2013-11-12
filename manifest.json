@@ -42,6 +42,7 @@
         "bower_components/jquery/jquery.js",
         "bower_components/backbone/backbone.js",
         "dist/js/util.js",
+        "dist/js/models.js",
         "dist/js/inject.js"
       ]
     }

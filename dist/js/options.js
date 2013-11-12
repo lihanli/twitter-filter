@@ -12,7 +12,7 @@
   chrome.extension.sendMessage({
     filteredUsers: null
   }, function(res) {
-    return filteredUsers = util.generateTwitterUsers({
+    return filteredUsers = models.generateTwitterUsers({
       users: res.filteredUsers,
       events: {
         add: function(twitterUser) {

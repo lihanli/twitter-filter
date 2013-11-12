@@ -5,7 +5,7 @@ dom =
 filteredUsers = null
 
 chrome.extension.sendMessage filteredUsers: null, (res) ->
-  filteredUsers = util.generateTwitterUsers
+  filteredUsers = models.generateTwitterUsers
     users: res.filteredUsers
     events:
       add: (twitterUser) ->

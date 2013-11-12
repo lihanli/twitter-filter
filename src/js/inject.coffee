@@ -57,7 +57,7 @@ if location.host == 'twitter.com'
       el.hide().after(replacement)
 
   chrome.extension.sendMessage filteredUsers: null, (res) ->
-    filteredUsers = util.generateTwitterUsers
+    filteredUsers = models.generateTwitterUsers
       users: res.filteredUsers
     filterCurrentPage()
 

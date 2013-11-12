@@ -28,63 +28,7 @@
       return _.map(arr, function(item) {
         return new Model(item);
       });
-    },
-    generateTwitterUsers: function(opt) {
-      var cb, evt, twitterUsers, _ref;
-      if (opt == null) {
-        opt = {};
-      }
-      if (opt.events == null) {
-        opt.events = {};
-      }
-      twitterUsers = new root.models.TwitterUsers();
-      _ref = opt.events;
-      for (evt in _ref) {
-        cb = _ref[evt];
-        twitterUsers.on(evt, cb);
-      }
-      twitterUsers.add(util.convertToBackboneArr(root.models.TwitterUser, opt.users));
-      twitterUsers.on('change reset add remove', function(__, collection) {
-        return chrome.extension.sendMessage({
-          filteredUsers: collection.toJSON()
-        });
-      });
-      return twitterUsers;
     }
   };
-
-  if (typeof Backbone !== "undefined" && Backbone !== null) {
-    root.models = {
-      TwitterUser: Backbone.Model.extend({
-        initialize: function() {
-          console.log(arguments);
-          return this.set({
-            screenName: $.trim(this.get('screenName')).replace(/\W/g, '').toLowerCase()
-          });
-        },
-        validate: function() {
-          if (util.isBlank(this.get('screenName'))) {
-            return "screenName can't be blank";
-          }
-        }
-      }),
-      TwitterUsers: Backbone.Collection.extend({
-        model: this.TwitterUser,
-        add: function(twitterUser) {
-          if (this.any(function(_twitterUser) {
-            return _twitterUser.get('screenName') === twitterUser.get('screenName');
-          })) {
-            return false;
-          }
-          return Backbone.Collection.prototype.add.apply(this, arguments);
-        }
-      }),
-      Options: Backbone.Model.extend({
-        defaults: {
-          hideCompletely: false
-        }
-      })
-    };
-  }
 
 }).call(this);

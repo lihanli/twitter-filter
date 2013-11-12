@@ -60,7 +60,7 @@
     chrome.extension.sendMessage({
       filteredUsers: null
     }, function(res) {
-      filteredUsers = util.generateTwitterUsers({
+      filteredUsers = models.generateTwitterUsers({
         users: res.filteredUsers
       });
       return filterCurrentPage();
