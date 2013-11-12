@@ -19,7 +19,7 @@ class InjectTest < CapybaraTestCase
   end
 
   def assert_tweet_not_filtered
-    assert_text_include('dog dog', find('.tweet'))
+    wait_until { first('.tweet').text.include?('dog dog') }
   end
 
   def test
@@ -37,6 +37,7 @@ class InjectTest < CapybaraTestCase
     assert_tweet_not_filtered
 
     # make new tweet
+    original_tweet_count = all('.tweet').size
     click('#global-new-tweet-button')
     has_css?('#tweet-box-global', visible: true)
     page.execute_script("jQuery('#tweet-box-global').text('hello')")
@@ -46,7 +47,7 @@ class InjectTest < CapybaraTestCase
     click_show_tweet
     first('.js-action-del').click
     click('.delete-action')
-    wait_until { all('.tweet').size == 1 }
+    wait_until { all('.tweet').size == original_tweet_count }
 
     # test that mentions and interactions page don't get filter applied
     send_keyboard_shortcut('gc')
@@ -78,6 +79,8 @@ class InjectTest < CapybaraTestCase
     assert_settings_saved_alert
 
     visit('http://twitter.com')
-    assert_has_no_css('.tweet')
+    %w(.tweet .conversation-module .missing-tweets-bar .conversation-header).each do |selector|
+      assert_has_no_css(selector)
+    end
   end
 end
