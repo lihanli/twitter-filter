@@ -21,10 +21,28 @@ class InjectTest < CapybaraTestCase
 
     login_twitter(@twitter_user[:screen_name], @twitter_user[:password])
     visit('http://twitter.com')
+    sleep 2 # who to follow popup will occassionally trigger mutation
 
-    assert_text("josephk92264943's tweet has been filtered. Show?", find('.tweet'))
+    # tweet filtered
+    lambda do
+      filtered_text = "josephk92264943's tweet has been filtered. Show?"
+
+      assert_text(filtered_text, find('.tweet'))
+      click_show_tweet
+      assert_text_include('dog dog', find('.tweet'))
+
+      # make new tweet
+      click('#global-new-tweet-button')
+      has_css?('#tweet-box-global', visible: true)
+      page.execute_script("jQuery('#tweet-box-global').text('hello')")
+      click('.tweet-action')
+      wait_until { first('.tweet').text == filtered_text }
+    end.()
+
     click_show_tweet
-    assert_text_include('dog dog', find('.tweet'))
+    first('.js-action-del').click
+    click('.delete-action')
+    wait_until { all('.tweet').size == 1 }
 
     send_keyboard_shortcut('gp')
     wait_until { current_path == "/#{@twitter_user[:screen_name]}" }
