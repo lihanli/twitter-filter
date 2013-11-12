@@ -34,6 +34,11 @@
       req = {};
       req[key] = model.toJSON();
       return chrome.extension.sendMessage(req);
+    },
+    highlight: function($el) {
+      return $el.effect('highlight', {
+        color: '#A9F5BC'
+      }, 500);
     }
   };
 

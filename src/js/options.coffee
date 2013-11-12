@@ -9,9 +9,11 @@ showSettingsSaved = ->
     <div class="alert alert-success">
       <span class="glyphicon glyphicon-ok"></span> Settings have been saved, reload page to see changes.
     </div>
-  """).delay(5000).fadeOut('slow')
-
+  """)
   dom.alertsBox.html(alertEl)
+  util.highlight(alertEl)
+
+  alertEl.delay(5000).fadeOut('slow')
 
 chrome.extension.sendMessage filteredUsers: null, (res) ->
   filteredUsers = models.generateTwitterUsers

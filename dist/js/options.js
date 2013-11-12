@@ -11,8 +11,10 @@
 
   showSettingsSaved = function() {
     var alertEl;
-    alertEl = $("<div class=\"alert alert-success\">\n  <span class=\"glyphicon glyphicon-ok\"></span> Settings have been saved, reload page to see changes.\n</div>").delay(5000).fadeOut('slow');
-    return dom.alertsBox.html(alertEl);
+    alertEl = $("<div class=\"alert alert-success\">\n  <span class=\"glyphicon glyphicon-ok\"></span> Settings have been saved, reload page to see changes.\n</div>");
+    dom.alertsBox.html(alertEl);
+    util.highlight(alertEl);
+    return alertEl.delay(5000).fadeOut('slow');
   };
 
   chrome.extension.sendMessage({
