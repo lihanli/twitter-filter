@@ -48,11 +48,15 @@ class InjectTest < CapybaraTestCase
     click('.delete-action')
     wait_until { all('.tweet').size == 1 }
 
-    # change pages and test that click handler still works
-    send_keyboard_shortcut('gp')
-    wait_until { current_path == "/#{@twitter_user[:screen_name]}" }
+    # test that mentions and interactions page don't get filter applied
+    send_keyboard_shortcut('gc')
+    assert_has_no_css('.tf-el')
+    wait_for_new_url(all('.list-link').last)
+    assert_has_no_css('.tf-el')
+
     send_keyboard_shortcut('gh')
     wait_until { current_path == '/' }
+    # test that click handler still works after page change
     click_show_tweet
     assert_tweet_not_filtered
 
