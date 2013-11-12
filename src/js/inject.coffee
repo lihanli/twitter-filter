@@ -5,19 +5,15 @@ if location.host == 'twitter.com'
   dom =
     streamContainer: $('.stream-container')
 
-  getTweetData = (->
-    class Tweet
-      constructor: ($el) ->
-        @screenName = $el.data('screen-name')
+  class Tweet
+    constructor: ($el) ->
+      @screenName = $el.data('screen-name')
 
-    ($el) ->
-      tweet = $el.data('tf-tweet')
-      return tweet if tweet
+    data: ->
+      _.pick(@, 'screenName')
 
-      tweet = new Tweet($el)
-      $el.data('tf-tweet', tweet)
-      return tweet
-  )()
+    @getCachedTweet: ($el) ->
+      $el.data('tf-tweet')
 
   hasClass = (el, selector) ->
     className = " " + selector + " "
@@ -35,26 +31,29 @@ if location.host == 'twitter.com'
 
     $els.find('.tweet').each ->
       $this = $(@)
-      tweet = getTweetData($this)
+      tweet = new Tweet($this)
+      $this.data('tf-tweet', tweet)
 
       # remove previous changes
       $this.show()
       $this.find('.content').show()
       $this.find('.tf-el').remove()
 
-      $this.find('.account-group').after("""
-        <a class="toggle-hide tf-el">
-          Hide
-        </a>
-      """)
-
       if filteredUsers.findWhere(screenName: tweet.screenName.toLowerCase())
+        tweet.hidden = true
+
         toHide.push
           $el: $this
 
+      $this.find('.account-group').after("""
+        <a class="toggle-hide tf-el">
+          #{if tweet.hidden then 'Unhide' else 'Hide'}
+        </a>
+      """)
+
     _.each toHide, (hideObj) ->
       {$el} = hideObj
-      tweet = getTweetData($el)
+      tweet = Tweet.getCachedTweet($el)
 
       if options.get('hideCompletely')
         $el.hide()
@@ -74,9 +73,13 @@ if location.host == 'twitter.com'
         $el.hide().after(replacement)
 
   dom.streamContainer.on 'click', '.tweet .toggle-hide', ->
-    tweet = $(this).parents('.tweet').data('tf-tweet')
-    if confirm("Are you sure you want to hide all of #{tweet.screenName}'s tweets?")
-      filteredUsers.add({ screenName: tweet.screenName })
+    tweet = Tweet.getCachedTweet($(this).parents('.tweet'))
+
+    if tweet.hidden
+      filteredUsers.remove(filteredUsers.findByScreenName(tweet.screenName))
+    else
+      if confirm("Are you sure you want to hide all of #{tweet.screenName}'s tweets?")
+        filteredUsers.add(new models.TwitterUser(tweet.data()))
 
   (->
     filteredUsersDeferred = $.Deferred()

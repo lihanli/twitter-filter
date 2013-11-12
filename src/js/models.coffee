@@ -2,7 +2,7 @@ window.models =
   TwitterUser: Backbone.Model.extend
     initialize: ->
       @.set
-        screenName: $.trim(@.get('screenName')).replace(/\W/g, '').toLowerCase()
+        screenName: models.TwitterUser.sanitizeScreenName(@.get('screenName'))
 
     validate: ->
       return "screenName can't be blank" if util.isBlank(@.get('screenName'))
@@ -11,12 +11,13 @@ window.models =
     model: @TwitterUser
 
     add: (twitterUser) ->
-      twitterUser = new models.TwitterUser(twitterUser) unless twitterUser instanceof models.TwitterUser
-
       return false if this.any (_twitterUser) ->
         _twitterUser.get('screenName') == twitterUser.get('screenName')
 
       Backbone.Collection.prototype.add.apply(this, arguments)
+
+    findByScreenName: (screenName) ->
+      @.findWhere({ screenName: models.TwitterUser.sanitizeScreenName(screenName) })
 
   Options: Backbone.Model.extend
     defaults:
@@ -37,3 +38,6 @@ window.models =
       opt.anyChangeCb() if opt.anyChangeCb
 
     twitterUsers
+
+models.TwitterUser.sanitizeScreenName = (screenName) ->
+  $.trim(screenName).replace(/\W/g, '').toLowerCase()

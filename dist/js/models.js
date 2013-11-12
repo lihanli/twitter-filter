@@ -4,7 +4,7 @@
     TwitterUser: Backbone.Model.extend({
       initialize: function() {
         return this.set({
-          screenName: $.trim(this.get('screenName')).replace(/\W/g, '').toLowerCase()
+          screenName: models.TwitterUser.sanitizeScreenName(this.get('screenName'))
         });
       },
       validate: function() {
@@ -16,15 +16,17 @@
     TwitterUsers: Backbone.Collection.extend({
       model: this.TwitterUser,
       add: function(twitterUser) {
-        if (!(twitterUser instanceof models.TwitterUser)) {
-          twitterUser = new models.TwitterUser(twitterUser);
-        }
         if (this.any(function(_twitterUser) {
           return _twitterUser.get('screenName') === twitterUser.get('screenName');
         })) {
           return false;
         }
         return Backbone.Collection.prototype.add.apply(this, arguments);
+      },
+      findByScreenName: function(screenName) {
+        return this.findWhere({
+          screenName: models.TwitterUser.sanitizeScreenName(screenName)
+        });
       }
     }),
     Options: Backbone.Model.extend({
@@ -55,6 +57,10 @@
       });
       return twitterUsers;
     }
+  };
+
+  models.TwitterUser.sanitizeScreenName = function(screenName) {
+    return $.trim(screenName).replace(/\W/g, '').toLowerCase();
   };
 
 }).call(this);
