@@ -76,7 +76,7 @@ if location.host == 'twitter.com'
   dom.streamContainer.on 'click', '.tweet .toggle-hide', ->
     tweet = $(this).parents('.tweet').data('tf-tweet')
     if confirm("Are you sure you want to hide all of #{tweet.screenName}'s tweets?")
-      console.log 'foo'
+      filteredUsers.add({ screenName: tweet.screenName })
 
   (->
     filteredUsersDeferred = $.Deferred()
@@ -85,6 +85,9 @@ if location.host == 'twitter.com'
     chrome.extension.sendMessage filteredUsers: null, (res) ->
       filteredUsers = models.generateTwitterUsers
         users: res.filteredUsers
+        anyChangeCb: ->
+          filterCurrentPage()
+
       filteredUsersDeferred.resolve()
 
     chrome.extension.sendMessage options: null, (res) ->

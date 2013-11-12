@@ -82,7 +82,9 @@
       var tweet;
       tweet = $(this).parents('.tweet').data('tf-tweet');
       if (confirm("Are you sure you want to hide all of " + tweet.screenName + "'s tweets?")) {
-        return console.log('foo');
+        return filteredUsers.add({
+          screenName: tweet.screenName
+        });
       }
     });
     (function() {
@@ -93,7 +95,10 @@
         filteredUsers: null
       }, function(res) {
         filteredUsers = models.generateTwitterUsers({
-          users: res.filteredUsers
+          users: res.filteredUsers,
+          anyChangeCb: function() {
+            return filterCurrentPage();
+          }
         });
         return filteredUsersDeferred.resolve();
       });

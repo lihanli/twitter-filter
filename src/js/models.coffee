@@ -11,6 +11,8 @@ window.models =
     model: @TwitterUser
 
     add: (twitterUser) ->
+      twitterUser = new models.TwitterUser(twitterUser) unless twitterUser instanceof models.TwitterUser
+
       return false if this.any (_twitterUser) ->
         _twitterUser.get('screenName') == twitterUser.get('screenName')
 

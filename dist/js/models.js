@@ -16,6 +16,9 @@
     TwitterUsers: Backbone.Collection.extend({
       model: this.TwitterUser,
       add: function(twitterUser) {
+        if (!(twitterUser instanceof models.TwitterUser)) {
+          twitterUser = new models.TwitterUser(twitterUser);
+        }
         if (this.any(function(_twitterUser) {
           return _twitterUser.get('screenName') === twitterUser.get('screenName');
         })) {
