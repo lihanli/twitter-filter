@@ -10,6 +10,8 @@ Capybara.register_driver :chrome do |app|
   )
 end
 
+Capybara.default_wait_time = 5
+
 class CapybaraTestCase < MiniTest::Unit::TestCase
   include Capybara::DSL
   include Wist
