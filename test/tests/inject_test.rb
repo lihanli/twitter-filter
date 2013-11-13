@@ -19,7 +19,7 @@ class InjectTest < CapybaraTestCase
   end
 
   def assert_tweet_not_filtered
-    wait_until { first('.tweet').text.include?('dog dog') }
+    wait_until { first('.tweet', visible: true).text.include?('dog dog') }
   end
 
   def test
@@ -36,7 +36,6 @@ class InjectTest < CapybaraTestCase
     assert_tweet_not_filtered
 
     # make new tweet
-    original_tweet_count = all('.tweet').size
     click('#global-new-tweet-button')
     has_css?('#tweet-box-global', visible: true)
     page.execute_script("jQuery('#tweet-box-global').text('hello')")
@@ -46,7 +45,7 @@ class InjectTest < CapybaraTestCase
     click_show_tweet
     first('.js-action-del').click
     click('.delete-action')
-    wait_until { all('.tweet').size == original_tweet_count }
+    assert_tweet_not_filtered
 
     # test that mentions and interactions page don't get filter applied
     send_keyboard_shortcut('gc')
@@ -57,6 +56,7 @@ class InjectTest < CapybaraTestCase
     send_keyboard_shortcut('gh')
     wait_until { current_path == '/' }
     # test that click handler still works after page change
+    sleep 1
     click_show_tweet
     assert_tweet_not_filtered
 
@@ -74,12 +74,17 @@ class InjectTest < CapybaraTestCase
 
     # test hide completely
     visit_options_page
-    click('.hide-completely')
+    click('.hide-completely-input')
     assert_settings_saved_alert
 
     visit('http://twitter.com')
     %w(.tweet .conversation-module .missing-tweets-bar .conversation-header).each do |selector|
       assert_has_no_css(selector)
     end
+
+    visit_options_page
+    click('.enable-input')
+    visit('http://twitter.com')
+    assert_has_no_css('.tf-el')
   end
 end
