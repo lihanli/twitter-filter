@@ -24,7 +24,6 @@ class InjectTest < CapybaraTestCase
 
   def test
     visit_options_page
-    # empty usernames don't get added
     add_filtered_user(@twitter_user[:screen_name])
 
     login_twitter(@twitter_user[:screen_name], @twitter_user[:password])
