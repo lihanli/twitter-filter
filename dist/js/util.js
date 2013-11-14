@@ -39,6 +39,10 @@
       return $el.effect('highlight', {
         color: '#A9F5BC'
       }, 500);
+    },
+    uncapitalize: function(str) {
+      str = str == null ? "" : String(str);
+      return str.charAt(0).toLowerCase() + str.slice(1);
     }
   };
 

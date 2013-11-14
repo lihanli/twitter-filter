@@ -7,6 +7,11 @@ class OptionsTest < CapybaraTestCase
 
   def test
     visit_options_page
+    lambda do
+      # enable filters
+      enable_input = find('.enable-input')
+      enable_input.click unless enable_input.selected?
+    end.()
     clear_filtered_users
 
     # empty usernames don't get added

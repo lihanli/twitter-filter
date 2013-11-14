@@ -19,7 +19,7 @@ class InjectTest < CapybaraTestCase
   end
 
   def assert_tweet_not_filtered
-    wait_until { first('.tweet', visible: true).text.include?('dog dog') }
+    wait_until { get_js("$($('.tweet:visible')[0]).text()").include?('dog dog') }
   end
 
   def test

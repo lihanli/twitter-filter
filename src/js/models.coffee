@@ -1,23 +1,21 @@
 window.models =
-  TwitterUser: Backbone.Model.extend
+  FilteredUser: Backbone.Model.extend
     initialize: ->
       @.set
-        screenName: models.TwitterUser.sanitizeScreenName(@.get('screenName'))
+        screenName: models.FilteredUser.sanitizeScreenName(@.get('screenName'))
 
     validate: ->
       msg = models.validations.presence.call(@, 'screenName')
       return msg if msg
 
-  TwitterUsers: Backbone.Collection.extend
-    model: @TwitterUser
+  FilteredUsers: Backbone.Collection.extend
+    add: (filteredUser) ->
+      return false if models.checkDuplicates.call(@, filteredUser, 'screenName')
 
-    add: ->
-      return false if models.checkDuplicates.call(@, 'twitterUser')
-
-      Backbone.Collection.prototype.add.apply(this, arguments)
+      Backbone.Collection.prototype.add.apply(@, arguments)
 
     findByScreenName: (screenName) ->
-      @.findWhere({ screenName: models.TwitterUser.sanitizeScreenName(screenName) })
+      @.findWhere({ screenName: models.FilteredUser.sanitizeScreenName(screenName) })
 
   FilteredPhrase: Backbone.Model.extend
     initialize: ->
@@ -40,32 +38,34 @@ window.models =
       hideCompletely: false
       enable: true
 
-  checkDuplicates: (attr) ->
-    self = @
-
-    self.any (model) ->
-      model.get(attr) == self.get(attr)
+  checkDuplicates: (model, attr) ->
+    @any (_model) ->
+      _model.get(attr) == model.get(attr)
 
   validations:
     presence: (attr) ->
       return "#{attr} can't be blank" if util.isBlank(@.get(attr))
       false
 
-  generateTwitterUsers: (opt = {}) ->
+  generateCollection: (opt = {}) ->
     opt.events = {} unless opt.events?
 
-    twitterUsers = new @TwitterUsers()
+    Collection = models[opt.collectionName]
+    collection = new Collection()
 
     for evt, cb of opt.events
-      twitterUsers.on(evt, cb)
+      collection.on(evt, cb)
 
-    twitterUsers.add(util.convertToBackboneArr(@TwitterUser, opt.users))
+    collection.add(util.convertToBackboneArr(Collection.prototype.model, opt.data))
 
-    twitterUsers.on 'change reset add remove', (__, collection) ->
-      util.saveToBg('filteredUsers', collection)
+    collection.on 'change reset add remove', ->
+      util.saveToBg(util.uncapitalize(opt.collectionName), collection)
       opt.anyChangeCb() if opt.anyChangeCb
 
-    twitterUsers
+    collection
 
-models.TwitterUser.sanitizeScreenName = (screenName) ->
+models.FilteredUser.sanitizeScreenName = (screenName) ->
   $.trim(screenName).replace(/\W/g, '').toLowerCase()
+
+models.FilteredUsers.prototype.model = models.FilteredUser
+models.FilteredPhrases.prototype.model = models.FilteredPhrase

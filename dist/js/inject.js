@@ -47,7 +47,7 @@
             var $this, screenName;
             $this = $(this);
             $this.show();
-            screenName = models.TwitterUser.sanitizeScreenName($this.find('a').attr('href').split('/')[1]);
+            screenName = models.FilteredUser.sanitizeScreenName($this.find('a').attr('href').split('/')[1]);
             if (filteredUsers.findWhere({
               screenName: screenName
             })) {
@@ -102,8 +102,9 @@
         return chrome.extension.sendMessage({
           filteredUsers: null
         }, function(res) {
-          filteredUsers = models.generateTwitterUsers({
-            users: res.filteredUsers,
+          filteredUsers = models.generateCollection({
+            collectionName: 'FilteredUsers',
+            data: res.filteredUsers,
             anyChangeCb: function() {
               return filterCurrentPage();
             }
@@ -152,7 +153,7 @@
             return filteredUsers.remove(filteredUsers.findByScreenName(tweet.screenName));
           } else {
             if (confirm("Hide all of " + tweet.screenName + "'s tweets? This won't unfollow or block him/her.")) {
-              return filteredUsers.add(new models.TwitterUser(tweet.data()));
+              return filteredUsers.add(new models.FilteredUser(tweet.data()));
             }
           }
         });

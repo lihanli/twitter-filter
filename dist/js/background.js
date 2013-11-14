@@ -13,6 +13,7 @@
 
   _.each({
     filteredUsers: [],
+    filteredPhrases: [],
     options: {}
   }, function(defaultValue, key) {
     return Settings.prototype[key] = function(newData) {

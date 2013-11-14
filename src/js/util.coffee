@@ -26,3 +26,7 @@ root.util =
 
   highlight: ($el) ->
     $el.effect('highlight', { color: '#A9F5BC' }, 500)
+
+  uncapitalize: (str) ->
+    str = if not str? then "" else String(str)
+    str.charAt(0).toLowerCase() + str.slice(1)

@@ -3,6 +3,7 @@ class Settings
 
 _.each {
   filteredUsers: []
+  filteredPhrases: []
   options: {}
 }, (defaultValue, key) ->
   Settings.prototype[key] = (newData) ->
@@ -14,7 +15,7 @@ _.each {
       res = {}
       res[key] = util.getFromLocalStorage(key) || defaultValue
       @_sendResponse(res)
-    ).apply(this, arguments)
+    ).apply(@, arguments)
 
 chrome.extension.onMessage.addListener (req, __, sendResponse) ->
   settings = new Settings(sendResponse)

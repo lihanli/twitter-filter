@@ -23,16 +23,17 @@
     filteredUsers: null
   }, function(res) {
     var filteredUsers;
-    filteredUsers = models.generateTwitterUsers({
-      users: res.filteredUsers,
+    filteredUsers = models.generateCollection({
+      collectionName: 'FilteredUsers',
+      data: res.filteredUsers,
       anyChangeCb: showSettingsSaved,
       events: {
-        add: function(twitterUser) {
+        add: function(filteredUser) {
           var el;
-          el = $("<li>\n  <span class=\"screen-name\">@" + (_.escape(twitterUser.get('screenName'))) + "</span>\n  <a class=\"close\">&times;</a>\n</li>").data('model', twitterUser);
+          el = $("<li>\n  <span class=\"screen-name\">@" + (_.escape(filteredUser.get('screenName'))) + "</span>\n  <a class=\"close\">&times;</a>\n</li>").data('model', filteredUser);
           return dom.filteredUsers.append(el);
         },
-        remove: function(twitterUser, __, opt) {
+        remove: function(filteredUser, __, opt) {
           return $(dom.filteredUsers.find('li')[opt.index]).remove();
         }
       }
@@ -43,15 +44,15 @@
       return filteredUsers.remove(el.data('model'));
     });
     return dom.filteredUserInput.keypress(function(e) {
-      var twitterUser;
+      var filteredUser;
       if (e.keyCode === 13) {
-        twitterUser = new models.TwitterUser({
+        filteredUser = new models.FilteredUser({
           screenName: dom.filteredUserInput.val()
         });
-        if (!twitterUser.isValid()) {
+        if (!filteredUser.isValid()) {
           return;
         }
-        filteredUsers.add(twitterUser);
+        filteredUsers.add(filteredUser);
         return dom.filteredUserInput.val('');
       }
     });

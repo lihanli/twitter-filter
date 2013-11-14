@@ -41,7 +41,7 @@ if location.host == 'twitter.com'
           # remove previous changes
           $this.show()
 
-          screenName = models.TwitterUser.sanitizeScreenName($this.find('a').attr('href').split('/')[1])
+          screenName = models.FilteredUser.sanitizeScreenName($this.find('a').attr('href').split('/')[1])
           if filteredUsers.findWhere(screenName: screenName)
             $this.hide()
             removeConversationModule($this)
@@ -97,8 +97,9 @@ if location.host == 'twitter.com'
       pageWatcher()
 
       chrome.extension.sendMessage filteredUsers: null, (res) ->
-        filteredUsers = models.generateTwitterUsers
-          users: res.filteredUsers
+        filteredUsers = models.generateCollection
+          collectionName: 'FilteredUsers'
+          data: res.filteredUsers
           anyChangeCb: ->
             filterCurrentPage()
 
@@ -138,7 +139,7 @@ if location.host == 'twitter.com'
           filteredUsers.remove(filteredUsers.findByScreenName(tweet.screenName))
         else
           if confirm("Hide all of #{tweet.screenName}'s tweets? This won't unfollow or block him/her.")
-            filteredUsers.add(new models.TwitterUser(tweet.data()))
+            filteredUsers.add(new models.FilteredUser(tweet.data()))
 
     ->
       path = location.pathname

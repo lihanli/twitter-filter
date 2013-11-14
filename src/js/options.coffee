@@ -18,21 +18,22 @@ showSettingsSaved = ->
   alertEl.delay(5000).fadeOut('slow')
 
 chrome.extension.sendMessage filteredUsers: null, (res) ->
-  filteredUsers = models.generateTwitterUsers
-    users: res.filteredUsers
+  filteredUsers = models.generateCollection
+    collectionName: 'FilteredUsers'
+    data: res.filteredUsers
     anyChangeCb: showSettingsSaved
     events:
-      add: (twitterUser) ->
+      add: (filteredUser) ->
         el = $("""
           <li>
-            <span class="screen-name">@#{_.escape(twitterUser.get('screenName'))}</span>
+            <span class="screen-name">@#{_.escape(filteredUser.get('screenName'))}</span>
             <a class="close">&times;</a>
           </li>
-        """).data('model', twitterUser)
+        """).data('model', filteredUser)
 
         dom.filteredUsers.append(el)
 
-      remove: (twitterUser, __, opt) ->
+      remove: (filteredUser, __, opt) ->
         $(dom.filteredUsers.find('li')[opt.index]).remove()
 
   dom.filteredUsers.on 'click', '.close', ->
@@ -41,11 +42,11 @@ chrome.extension.sendMessage filteredUsers: null, (res) ->
 
   dom.filteredUserInput.keypress (e) ->
     if e.keyCode == 13
-      twitterUser = new models.TwitterUser(screenName: dom.filteredUserInput.val())
+      filteredUser = new models.FilteredUser(screenName: dom.filteredUserInput.val())
 
-      return unless twitterUser.isValid()
+      return unless filteredUser.isValid()
 
-      filteredUsers.add(twitterUser)
+      filteredUsers.add(filteredUser)
       dom.filteredUserInput.val('')
 
 chrome.extension.sendMessage options: null, (res) ->
