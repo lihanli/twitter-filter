@@ -5,24 +5,51 @@ window.models =
         screenName: models.TwitterUser.sanitizeScreenName(@.get('screenName'))
 
     validate: ->
-      return "screenName can't be blank" if util.isBlank(@.get('screenName'))
+      msg = models.validations.presence.call(@, 'screenName')
+      return msg if msg
 
   TwitterUsers: Backbone.Collection.extend
     model: @TwitterUser
 
-    add: (twitterUser) ->
-      return false if this.any (_twitterUser) ->
-        _twitterUser.get('screenName') == twitterUser.get('screenName')
+    add: ->
+      return false if models.checkDuplicates.call(@, 'twitterUser')
 
       Backbone.Collection.prototype.add.apply(this, arguments)
 
     findByScreenName: (screenName) ->
       @.findWhere({ screenName: models.TwitterUser.sanitizeScreenName(screenName) })
 
+  FilteredPhrase: Backbone.Model.extend
+    initialize: ->
+      @.set(phrase: $.trim(@.get('phrase')))
+
+    validate: ->
+      msg = models.validations.presence.call(@, 'phrase')
+      return msg if msg
+
+  FilteredPhrases: Backbone.Collection.extend
+    model: @FilteredPhrase
+
+    add: (filteredPhrase) ->
+      return false if models.checkDuplicates('phrase')
+
+      Backbone.Collection.prototype.add.apply(this, arguments)
+
   Options: Backbone.Model.extend
     defaults:
       hideCompletely: false
       enable: true
+
+  checkDuplicates: (attr) ->
+    self = @
+
+    self.any (model) ->
+      model.get(attr) == self.get(attr)
+
+  validations:
+    presence: (attr) ->
+      return "#{attr} can't be blank" if util.isBlank(@.get(attr))
+      false
 
   generateTwitterUsers: (opt = {}) ->
     opt.events = {} unless opt.events?

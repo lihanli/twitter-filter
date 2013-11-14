@@ -8,17 +8,17 @@
         });
       },
       validate: function() {
-        if (util.isBlank(this.get('screenName'))) {
-          return "screenName can't be blank";
+        var msg;
+        msg = models.validations.presence.call(this, 'screenName');
+        if (msg) {
+          return msg;
         }
       }
     }),
     TwitterUsers: Backbone.Collection.extend({
       model: this.TwitterUser,
-      add: function(twitterUser) {
-        if (this.any(function(_twitterUser) {
-          return _twitterUser.get('screenName') === twitterUser.get('screenName');
-        })) {
+      add: function() {
+        if (models.checkDuplicates.call(this, 'twitterUser')) {
           return false;
         }
         return Backbone.Collection.prototype.add.apply(this, arguments);
@@ -29,12 +29,50 @@
         });
       }
     }),
+    FilteredPhrase: Backbone.Model.extend({
+      initialize: function() {
+        return this.set({
+          phrase: $.trim(this.get('phrase'))
+        });
+      },
+      validate: function() {
+        var msg;
+        msg = models.validations.presence.call(this, 'phrase');
+        if (msg) {
+          return msg;
+        }
+      }
+    }),
+    FilteredPhrases: Backbone.Collection.extend({
+      model: this.FilteredPhrase,
+      add: function(filteredPhrase) {
+        if (models.checkDuplicates('phrase')) {
+          return false;
+        }
+        return Backbone.Collection.prototype.add.apply(this, arguments);
+      }
+    }),
     Options: Backbone.Model.extend({
       defaults: {
         hideCompletely: false,
         enable: true
       }
     }),
+    checkDuplicates: function(attr) {
+      var self;
+      self = this;
+      return self.any(function(model) {
+        return model.get(attr) === self.get(attr);
+      });
+    },
+    validations: {
+      presence: function(attr) {
+        if (util.isBlank(this.get(attr))) {
+          return "" + attr + " can't be blank";
+        }
+        return false;
+      }
+    },
     generateTwitterUsers: function(opt) {
       var cb, evt, twitterUsers, _ref;
       if (opt == null) {

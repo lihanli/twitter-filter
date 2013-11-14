@@ -78,6 +78,7 @@ class InjectTest < CapybaraTestCase
     assert_settings_saved_alert
 
     visit('http://twitter.com')
+    # TODO verify the existence of these classes when filtering is off
     %w(.tweet .conversation-module .missing-tweets-bar .conversation-header).each do |selector|
       assert_has_no_css(selector)
     end
