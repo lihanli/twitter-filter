@@ -41,8 +41,7 @@ if location.host == 'twitter.com'
           # remove previous changes
           $this.show()
 
-          screenName = models.FilteredUser.sanitizeScreenName($this.find('a').attr('href').split('/')[1])
-          if filteredUsers.findWhere(screenName: screenName)
+          if filteredUsers.findByScreenName($this.find('a').attr('href').split('/')[1])
             $this.hide()
             removeConversationModule($this)
 
@@ -56,7 +55,7 @@ if location.host == 'twitter.com'
       $this.find('.content').show()
       $this.find('.tf-el').remove()
 
-      if filteredUsers.findWhere(screenName: tweet.screenName.toLowerCase())
+      if filteredUsers.findByScreenName(tweet.screenName)
         tweet.hidden = true
 
         toHide.push

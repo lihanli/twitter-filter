@@ -44,13 +44,10 @@
       if (hideCompletely) {
         _.each(['.missing-tweets-bar', '.conversation-header'], function(klass) {
           return $els.find(klass).each(function() {
-            var $this, screenName;
+            var $this;
             $this = $(this);
             $this.show();
-            screenName = models.FilteredUser.sanitizeScreenName($this.find('a').attr('href').split('/')[1]);
-            if (filteredUsers.findWhere({
-              screenName: screenName
-            })) {
+            if (filteredUsers.findByScreenName($this.find('a').attr('href').split('/')[1])) {
               $this.hide();
               return removeConversationModule($this);
             }
@@ -65,9 +62,7 @@
         $this.show();
         $this.find('.content').show();
         $this.find('.tf-el').remove();
-        if (filteredUsers.findWhere({
-          screenName: tweet.screenName.toLowerCase()
-        })) {
+        if (filteredUsers.findByScreenName(tweet.screenName)) {
           tweet.hidden = true;
           toHide.push({
             $el: $this
