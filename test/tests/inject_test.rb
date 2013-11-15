@@ -78,8 +78,8 @@ class InjectTest < CapybaraTestCase
     assert_settings_saved_alert
 
     visit('http://twitter.com')
-    # TODO verify the existence of these classes when filtering is off
-    %w(.tweet .conversation-module .missing-tweets-bar .conversation-header).each do |selector|
+    tweet_classes = %w(.tweet .conversation-module .missing-tweets-bar)
+    tweet_classes.each do |selector|
       assert_has_no_css(selector)
     end
 
@@ -87,5 +87,9 @@ class InjectTest < CapybaraTestCase
     click('.enable-input')
     visit('http://twitter.com')
     assert_has_no_css('.tf-el')
+
+    tweet_classes.each do |selector|
+      assert_has_css(selector)
+    end
   end
 end
