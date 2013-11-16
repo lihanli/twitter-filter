@@ -30,5 +30,14 @@ class OptionsTest < CapybaraTestCase
     # test close button
     click('.filtered-users .close')
     assert_equal(0, user_count)
+
+    # test filtered phrases
+    add_filtered_phrase('  ')
+    add_filtered_phrase(' dog ')
+    assert_settings_saved_alert
+    add_filtered_phrase('dog')
+    assert_equal(1, all('.filtered-text li').size)
+    click('.filtered-text .close')
+    assert_equal(0, all('.filtered-text li').size)
   end
 end
