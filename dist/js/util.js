@@ -43,6 +43,14 @@
     uncapitalize: function(str) {
       str = str == null ? "" : String(str);
       return str.charAt(0).toLowerCase() + str.slice(1);
+    },
+    inputHandler: function($el, cb) {
+      return $el.keypress(function(e) {
+        if (e.keyCode === 13) {
+          cb.call(this);
+          return $el.val('');
+        }
+      });
     }
   };
 

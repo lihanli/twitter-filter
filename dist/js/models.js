@@ -43,9 +43,8 @@
       }
     }),
     FilteredPhrases: Backbone.Collection.extend({
-      model: this.FilteredPhrase,
       add: function(filteredPhrase) {
-        if (models.checkDuplicates('phrase')) {
+        if (models.checkDuplicates.call(this, filteredPhrase, 'phrase')) {
           return false;
         }
         return Backbone.Collection.prototype.add.apply(this, arguments);

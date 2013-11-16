@@ -7,7 +7,7 @@ input[type="text"] {
 .filtered-user-input {
   margin-bottom: 15px; }
 
-.filtered-users li .close {
+.close {
   float: none; }
 
 .hidden-light {

@@ -26,10 +26,8 @@ window.models =
       return msg if msg
 
   FilteredPhrases: Backbone.Collection.extend
-    model: @FilteredPhrase
-
     add: (filteredPhrase) ->
-      return false if models.checkDuplicates('phrase')
+      return false if models.checkDuplicates.call(@, filteredPhrase, 'phrase')
 
       Backbone.Collection.prototype.add.apply(this, arguments)
 

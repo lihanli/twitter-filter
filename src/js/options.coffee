@@ -5,6 +5,8 @@ dom =
   alertsBox: $('.alerts-box')
   optionsBox: $('.options-box')
   enableInput: $('.enable-input')
+  filteredText: $('.filtered-text')
+  filteredTextInput: $('.filtered-text-input')
 
 showSettingsSaved = ->
   alertEl = $("""
@@ -16,6 +18,34 @@ showSettingsSaved = ->
   util.highlight(alertEl)
 
   alertEl.delay(5000).fadeOut('slow')
+
+chrome.extension.sendMessage filteredPhrases: null, (res) ->
+  filteredPhrases = models.generateCollection
+    collectionName: 'FilteredPhrases'
+    data: res.filteredPhrases
+    anyChangeCb: showSettingsSaved
+    events:
+      add: (filteredPhrase) ->
+        el = $("""
+          <li>
+            #{_.escape(filteredPhrase.get('phrase'))}
+            <a class="close">&times;</a>
+          </li>
+        """).data('model', filteredPhrase)
+
+        dom.filteredText.append(el)
+
+      remove: (__, ___, opt) ->
+        $(dom.filteredText.find('li')[opt.index]).remove()
+
+  dom.filteredText.on 'click', '.close', ->
+    el = $(@).parents('li')
+    filteredPhrases.remove(el.data('model'))
+
+  util.inputHandler dom.filteredTextInput, ->
+    filteredPhrase = new models.FilteredPhrase(phrase: dom.filteredTextInput.val())
+    return unless filteredPhrase.isValid()
+    filteredPhrases.add(filteredPhrase)
 
 chrome.extension.sendMessage filteredUsers: null, (res) ->
   filteredUsers = models.generateCollection
@@ -33,21 +63,17 @@ chrome.extension.sendMessage filteredUsers: null, (res) ->
 
         dom.filteredUsers.append(el)
 
-      remove: (filteredUser, __, opt) ->
+      remove: (__, ___, opt) ->
         $(dom.filteredUsers.find('li')[opt.index]).remove()
 
   dom.filteredUsers.on 'click', '.close', ->
     el = $(@).parents('li')
     filteredUsers.remove(el.data('model'))
 
-  dom.filteredUserInput.keypress (e) ->
-    if e.keyCode == 13
-      filteredUser = new models.FilteredUser(screenName: dom.filteredUserInput.val())
-
-      return unless filteredUser.isValid()
-
-      filteredUsers.add(filteredUser)
-      dom.filteredUserInput.val('')
+  util.inputHandler dom.filteredUserInput, ->
+    filteredUser = new models.FilteredUser(screenName: dom.filteredUserInput.val())
+    return unless filteredUser.isValid()
+    filteredUsers.add(filteredUser)
 
 chrome.extension.sendMessage options: null, (res) ->
   options = new models.Options(res.options)

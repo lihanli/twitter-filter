@@ -8,7 +8,9 @@
     hideCompletelyInput: $('.hide-completely-input'),
     alertsBox: $('.alerts-box'),
     optionsBox: $('.options-box'),
-    enableInput: $('.enable-input')
+    enableInput: $('.enable-input'),
+    filteredText: $('.filtered-text'),
+    filteredTextInput: $('.filtered-text-input')
   };
 
   showSettingsSaved = function() {
@@ -18,6 +20,42 @@
     util.highlight(alertEl);
     return alertEl.delay(5000).fadeOut('slow');
   };
+
+  chrome.extension.sendMessage({
+    filteredPhrases: null
+  }, function(res) {
+    var filteredPhrases;
+    filteredPhrases = models.generateCollection({
+      collectionName: 'FilteredPhrases',
+      data: res.filteredPhrases,
+      anyChangeCb: showSettingsSaved,
+      events: {
+        add: function(filteredPhrase) {
+          var el;
+          el = $("<li>\n  " + (_.escape(filteredPhrase.get('phrase'))) + "\n  <a class=\"close\">&times;</a>\n</li>").data('model', filteredPhrase);
+          return dom.filteredText.append(el);
+        },
+        remove: function(__, ___, opt) {
+          return $(dom.filteredText.find('li')[opt.index]).remove();
+        }
+      }
+    });
+    dom.filteredText.on('click', '.close', function() {
+      var el;
+      el = $(this).parents('li');
+      return filteredPhrases.remove(el.data('model'));
+    });
+    return util.inputHandler(dom.filteredTextInput, function() {
+      var filteredPhrase;
+      filteredPhrase = new models.FilteredPhrase({
+        phrase: dom.filteredTextInput.val()
+      });
+      if (!filteredPhrase.isValid()) {
+        return;
+      }
+      return filteredPhrases.add(filteredPhrase);
+    });
+  });
 
   chrome.extension.sendMessage({
     filteredUsers: null
@@ -33,7 +71,7 @@
           el = $("<li>\n  <span class=\"screen-name\">@" + (_.escape(filteredUser.get('screenName'))) + "</span>\n  <a class=\"close\">&times;</a>\n</li>").data('model', filteredUser);
           return dom.filteredUsers.append(el);
         },
-        remove: function(filteredUser, __, opt) {
+        remove: function(__, ___, opt) {
           return $(dom.filteredUsers.find('li')[opt.index]).remove();
         }
       }
@@ -43,18 +81,15 @@
       el = $(this).parents('li');
       return filteredUsers.remove(el.data('model'));
     });
-    return dom.filteredUserInput.keypress(function(e) {
+    return util.inputHandler(dom.filteredUserInput, function() {
       var filteredUser;
-      if (e.keyCode === 13) {
-        filteredUser = new models.FilteredUser({
-          screenName: dom.filteredUserInput.val()
-        });
-        if (!filteredUser.isValid()) {
-          return;
-        }
-        filteredUsers.add(filteredUser);
-        return dom.filteredUserInput.val('');
+      filteredUser = new models.FilteredUser({
+        screenName: dom.filteredUserInput.val()
+      });
+      if (!filteredUser.isValid()) {
+        return;
       }
+      return filteredUsers.add(filteredUser);
     });
   });
 

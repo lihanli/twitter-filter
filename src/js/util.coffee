@@ -30,3 +30,9 @@ root.util =
   uncapitalize: (str) ->
     str = if not str? then "" else String(str)
     str.charAt(0).toLowerCase() + str.slice(1)
+
+  inputHandler: ($el, cb) ->
+    $el.keypress (e) ->
+      if e.keyCode == 13
+        cb.call(@)
+        $el.val('')
