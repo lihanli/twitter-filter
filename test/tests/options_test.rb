@@ -19,7 +19,7 @@ class OptionsTest < CapybaraTestCase
     assert_equal(0, user_count)
     add_filtered_user(' @dog ')
     # input cleared after successful input
-    assert_equal('', get_val('.filtered-user-input'))
+    assert_equal('', get_val('.filtered-users-input'))
     # shows saved alert
     assert_settings_saved_alert
     # whitespace gets trimmed
@@ -36,8 +36,8 @@ class OptionsTest < CapybaraTestCase
     add_filtered_phrase(' dog ')
     assert_settings_saved_alert
     add_filtered_phrase('dog')
-    assert_equal(1, all('.filtered-text li').size)
-    click('.filtered-text .close')
-    assert_equal(0, all('.filtered-text li').size)
+    assert_equal(1, all('.filtered-phrases li').size)
+    click('.filtered-phrases .close')
+    assert_equal(0, all('.filtered-phrases li').size)
   end
 end

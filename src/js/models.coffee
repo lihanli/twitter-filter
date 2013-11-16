@@ -1,9 +1,5 @@
 window.models =
   FilteredUser: Backbone.Model.extend
-    initialize: ->
-      @.set
-        screenName: models.FilteredUser.sanitizeScreenName(@.get('screenName'))
-
     validate: ->
       msg = models.validations.presence.call(@, 'screenName')
       return msg if msg
@@ -18,9 +14,6 @@ window.models =
       @.findWhere({ screenName: models.FilteredUser.sanitizeScreenName(screenName) })
 
   FilteredPhrase: Backbone.Model.extend
-    initialize: ->
-      @.set(phrase: $.trim(@.get('phrase')))
-
     validate: ->
       msg = models.validations.presence.call(@, 'phrase')
       return msg if msg
@@ -44,6 +37,14 @@ window.models =
     presence: (attr) ->
       return "#{attr} can't be blank" if util.isBlank(@.get(attr))
       false
+
+  generateModelWithSanitizer: (opt = {}) ->
+    model = new opt.Model()
+    model.on "change:#{opt.attr}", (__, val, changeOpt) ->
+      return if changeOpt.noSanitize
+      model.set(opt.attr, opt.sanitizeFn(val), noSanitize: true)
+
+    model
 
   generateCollection: (opt = {}) ->
     opt.events = {} unless opt.events?

@@ -2,11 +2,6 @@
 (function() {
   window.models = {
     FilteredUser: Backbone.Model.extend({
-      initialize: function() {
-        return this.set({
-          screenName: models.FilteredUser.sanitizeScreenName(this.get('screenName'))
-        });
-      },
       validate: function() {
         var msg;
         msg = models.validations.presence.call(this, 'screenName');
@@ -29,11 +24,6 @@
       }
     }),
     FilteredPhrase: Backbone.Model.extend({
-      initialize: function() {
-        return this.set({
-          phrase: $.trim(this.get('phrase'))
-        });
-      },
       validate: function() {
         var msg;
         msg = models.validations.presence.call(this, 'phrase');
@@ -68,6 +58,22 @@
         }
         return false;
       }
+    },
+    generateModelWithSanitizer: function(opt) {
+      var model;
+      if (opt == null) {
+        opt = {};
+      }
+      model = new opt.Model();
+      model.on("change:" + opt.attr, function(__, val, changeOpt) {
+        if (changeOpt.noSanitize) {
+          return;
+        }
+        return model.set(opt.attr, opt.sanitizeFn(val), {
+          noSanitize: true
+        });
+      });
+      return model;
     },
     generateCollection: function(opt) {
       var Collection, cb, collection, evt, _ref;

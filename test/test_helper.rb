@@ -45,11 +45,11 @@ class CapybaraTestCase < MiniTest::Unit::TestCase
   end
 
   def add_filtered_user(name)
-    set_input_and_press_enter(find('.filtered-user-input'), name)
+    set_input_and_press_enter(find('.filtered-users-input'), name)
   end
 
   def add_filtered_phrase(phrase)
-    set_input_and_press_enter(find('.filtered-text-input'), phrase)
+    set_input_and_press_enter(find('.filtered-phrases-input'), phrase)
   end
 
   def confirm_accept(expected_msg = false)

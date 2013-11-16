@@ -28,8 +28,10 @@ root.util =
     $el.effect('highlight', { color: '#A9F5BC' }, 500)
 
   uncapitalize: (str) ->
-    str = if not str? then "" else String(str)
     str.charAt(0).toLowerCase() + str.slice(1)
+
+  capitalize: (str) ->
+    str.charAt(0).toUpperCase() + str.slice(1)
 
   inputHandler: ($el, cb) ->
     $el.keypress (e) ->

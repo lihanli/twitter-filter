@@ -3,14 +3,14 @@
   var dom, showSettingsSaved;
 
   dom = {
-    filteredUserInput: $('.filtered-user-input'),
+    filteredUsersInput: $('.filtered-users-input'),
     filteredUsers: $('.filtered-users'),
     hideCompletelyInput: $('.hide-completely-input'),
     alertsBox: $('.alerts-box'),
     optionsBox: $('.options-box'),
     enableInput: $('.enable-input'),
-    filteredText: $('.filtered-text'),
-    filteredTextInput: $('.filtered-text-input')
+    filteredPhrases: $('.filtered-phrases'),
+    filteredPhrasesInput: $('.filtered-phrases-input')
   };
 
   showSettingsSaved = function() {
@@ -21,75 +21,65 @@
     return alertEl.delay(5000).fadeOut('slow');
   };
 
-  chrome.extension.sendMessage({
-    filteredPhrases: null
-  }, function(res) {
-    var filteredPhrases;
-    filteredPhrases = models.generateCollection({
-      collectionName: 'FilteredPhrases',
-      data: res.filteredPhrases,
-      anyChangeCb: showSettingsSaved,
-      events: {
-        add: function(filteredPhrase) {
-          var el;
-          el = $("<li>\n  " + (_.escape(filteredPhrase.get('phrase'))) + "\n  <a class=\"close\">&times;</a>\n</li>").data('model', filteredPhrase);
-          return dom.filteredText.append(el);
-        },
-        remove: function(__, ___, opt) {
-          return $(dom.filteredText.find('li')[opt.index]).remove();
+  _.each({
+    filteredUsers: {
+      template: function(screenNameEscaped) {
+        return "<span class='screen-name'>@" + screenNameEscaped + "</span>";
+      },
+      defaultAttr: 'screenName',
+      sanitizeFn: models.FilteredUser.sanitizeScreenName
+    },
+    filteredPhrases: {
+      defaultAttr: 'phrase',
+      sanitizeFn: $.trim
+    }
+  }, function(opt, dataName) {
+    var req;
+    req = {};
+    req[dataName] = null;
+    return chrome.extension.sendMessage(req, function(res) {
+      var $collectionEl, collection, dataNameCapitalized;
+      $collectionEl = dom[dataName];
+      dataNameCapitalized = util.capitalize(dataName);
+      collection = models.generateCollection({
+        collectionName: dataNameCapitalized,
+        data: res[dataName],
+        anyChangeCb: showSettingsSaved,
+        events: {
+          add: function(item) {
+            var attrEscaped, el, template;
+            attrEscaped = _.escape(item.get(opt.defaultAttr));
+            template = opt.template ? opt.template(attrEscaped) : attrEscaped;
+            el = $("<li>\n  " + template + "\n  <a class=\"close\">&times;</a>\n</li>").data('model', item);
+            return $collectionEl.append(el);
+          },
+          remove: function(__, ___, opt) {
+            return $($collectionEl.find('li')[opt.index]).remove();
+          }
         }
-      }
-    });
-    dom.filteredText.on('click', '.close', function() {
-      var el;
-      el = $(this).parents('li');
-      return filteredPhrases.remove(el.data('model'));
-    });
-    return util.inputHandler(dom.filteredTextInput, function() {
-      var filteredPhrase;
-      filteredPhrase = new models.FilteredPhrase({
-        phrase: dom.filteredTextInput.val()
       });
-      if (!filteredPhrase.isValid()) {
-        return;
-      }
-      return filteredPhrases.add(filteredPhrase);
-    });
-  });
-
-  chrome.extension.sendMessage({
-    filteredUsers: null
-  }, function(res) {
-    var filteredUsers;
-    filteredUsers = models.generateCollection({
-      collectionName: 'FilteredUsers',
-      data: res.filteredUsers,
-      anyChangeCb: showSettingsSaved,
-      events: {
-        add: function(filteredUser) {
-          var el;
-          el = $("<li>\n  <span class=\"screen-name\">@" + (_.escape(filteredUser.get('screenName'))) + "</span>\n  <a class=\"close\">&times;</a>\n</li>").data('model', filteredUser);
-          return dom.filteredUsers.append(el);
-        },
-        remove: function(__, ___, opt) {
-          return $(dom.filteredUsers.find('li')[opt.index]).remove();
-        }
-      }
-    });
-    dom.filteredUsers.on('click', '.close', function() {
-      var el;
-      el = $(this).parents('li');
-      return filteredUsers.remove(el.data('model'));
-    });
-    return util.inputHandler(dom.filteredUserInput, function() {
-      var filteredUser;
-      filteredUser = new models.FilteredUser({
-        screenName: dom.filteredUserInput.val()
+      $collectionEl.on('click', '.close', function() {
+        var el;
+        el = $(this).parents('li');
+        return collection.remove(el.data('model'));
       });
-      if (!filteredUser.isValid()) {
-        return;
-      }
-      return filteredUsers.add(filteredUser);
+      return (function() {
+        var $inputEl;
+        $inputEl = dom["" + dataName + "Input"];
+        return util.inputHandler($inputEl, function() {
+          var item;
+          item = models.generateModelWithSanitizer({
+            Model: models[dataNameCapitalized].prototype.model,
+            attr: opt.defaultAttr,
+            sanitizeFn: opt.sanitizeFn
+          });
+          item.set(opt.defaultAttr, $inputEl.val());
+          if (!item.isValid()) {
+            return;
+          }
+          return collection.add(item);
+        });
+      })();
     });
   });
 
