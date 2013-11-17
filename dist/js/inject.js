@@ -16,6 +16,14 @@
         return _.pick(this, 'screenName');
       };
 
+      Tweet.prototype.shouldHide = function() {
+        return this.hidden = (function() {
+          if (filteredUsers.findByScreenName(this.screenName)) {
+            return true;
+          }
+        }).apply(this, arguments);
+      };
+
       Tweet.getCachedTweet = function($el) {
         return $el.data('tf-tweet');
       };
@@ -63,8 +71,7 @@
         $this.show();
         $this.find('.content').show();
         $this.find('.tf-el').remove();
-        if (filteredUsers.findByScreenName(tweet.screenName)) {
-          tweet.hidden = true;
+        if (tweet.shouldHide()) {
           toHide.push({
             $el: $this
           });

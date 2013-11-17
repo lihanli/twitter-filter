@@ -12,6 +12,11 @@ if location.host == 'twitter.com'
     userData: ->
       _.pick(@, 'screenName')
 
+    shouldHide: ->
+      @hidden = (->
+        return true if filteredUsers.findByScreenName(@screenName)
+      ).apply(@, arguments)
+
     @getCachedTweet: ($el) ->
       $el.data('tf-tweet')
 
@@ -56,9 +61,7 @@ if location.host == 'twitter.com'
       $this.find('.content').show()
       $this.find('.tf-el').remove()
 
-      if filteredUsers.findByScreenName(tweet.screenName)
-        tweet.hidden = true
-
+      if tweet.shouldHide()
         toHide.push
           $el: $this
 
