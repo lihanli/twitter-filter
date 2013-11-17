@@ -9,9 +9,10 @@
     Tweet = (function() {
       function Tweet($el) {
         this.screenName = $el.data('screen-name');
+        this.text = $el.find('.tweet-text').text();
       }
 
-      Tweet.prototype.data = function() {
+      Tweet.prototype.userData = function() {
         return _.pick(this, 'screenName');
       };
 
@@ -142,13 +143,18 @@
       };
       addClickHandlers = function() {
         return $('.stream-container').on('click', '.tweet .toggle-hide', function() {
-          var tweet;
+          var filteredUser, tweet;
           tweet = Tweet.getCachedTweet($(this).parents('.tweet'));
           if (tweet.hidden) {
             return filteredUsers.remove(filteredUsers.findByScreenName(tweet.screenName));
           } else {
             if (confirm("Hide all of " + tweet.screenName + "'s tweets? This won't unfollow or block him/her.")) {
-              return filteredUsers.add(new models.FilteredUser(tweet.data()));
+              filteredUser = models.generateModelWithSanitizer({
+                Model: models.FilteredUser,
+                attr: 'screenName'
+              });
+              filteredUser.set(tweet.userData());
+              return filteredUsers.add(filteredUser);
             }
           }
         });

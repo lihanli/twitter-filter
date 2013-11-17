@@ -24,11 +24,9 @@ _.each
     template: (screenNameEscaped) ->
       "<span class='screen-name'>@#{screenNameEscaped}</span>"
     defaultAttr: 'screenName'
-    sanitizeFn: models.FilteredUser.sanitizeScreenName
 
   filteredPhrases:
     defaultAttr: 'phrase'
-    sanitizeFn: $.trim
 , (opt, dataName) ->
   req = {}
   req[dataName] = null
@@ -67,7 +65,6 @@ _.each
         item = models.generateModelWithSanitizer
           Model: models[dataNameCapitalized].prototype.model
           attr: opt.defaultAttr
-          sanitizeFn: opt.sanitizeFn
         item.set(opt.defaultAttr, $inputEl.val())
         return unless item.isValid()
         collection.add(item)

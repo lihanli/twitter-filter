@@ -40,9 +40,11 @@ window.models =
 
   generateModelWithSanitizer: (opt = {}) ->
     model = new opt.Model()
+    sanitizeFn = opt.sanitizeFn || opt.Model["sanitize#{util.capitalize(opt.attr)}"]
+
     model.on "change:#{opt.attr}", (__, val, changeOpt) ->
       return if changeOpt.noSanitize
-      model.set(opt.attr, opt.sanitizeFn(val), noSanitize: true)
+      model.set(opt.attr, sanitizeFn(val), noSanitize: true)
 
     model
 
@@ -65,6 +67,8 @@ window.models =
 
 models.FilteredUser.sanitizeScreenName = (screenName) ->
   $.trim(screenName).replace(/\W/g, '').toLowerCase()
+models.FilteredPhrase.sanitizePhrase = (phrase) ->
+  $.trim(phrase)
 
 models.FilteredUsers.prototype.model = models.FilteredUser
 models.FilteredPhrases.prototype.model = models.FilteredPhrase

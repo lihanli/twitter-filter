@@ -7,8 +7,9 @@ if location.host == 'twitter.com'
   class Tweet
     constructor: ($el) ->
       @screenName = $el.data('screen-name')
+      @text = $el.find('.tweet-text').text()
 
-    data: ->
+    userData: ->
       _.pick(@, 'screenName')
 
     @getCachedTweet: ($el) ->
@@ -138,7 +139,12 @@ if location.host == 'twitter.com'
           filteredUsers.remove(filteredUsers.findByScreenName(tweet.screenName))
         else
           if confirm("Hide all of #{tweet.screenName}'s tweets? This won't unfollow or block him/her.")
-            filteredUsers.add(new models.FilteredUser(tweet.data()))
+            filteredUser = models.generateModelWithSanitizer
+              Model: models.FilteredUser
+              attr: 'screenName'
+            filteredUser.set(tweet.userData())
+
+            filteredUsers.add(filteredUser)
 
     ->
       path = location.pathname

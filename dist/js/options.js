@@ -26,12 +26,10 @@
       template: function(screenNameEscaped) {
         return "<span class='screen-name'>@" + screenNameEscaped + "</span>";
       },
-      defaultAttr: 'screenName',
-      sanitizeFn: models.FilteredUser.sanitizeScreenName
+      defaultAttr: 'screenName'
     },
     filteredPhrases: {
-      defaultAttr: 'phrase',
-      sanitizeFn: $.trim
+      defaultAttr: 'phrase'
     }
   }, function(opt, dataName) {
     var req;
@@ -70,8 +68,7 @@
           var item;
           item = models.generateModelWithSanitizer({
             Model: models[dataNameCapitalized].prototype.model,
-            attr: opt.defaultAttr,
-            sanitizeFn: opt.sanitizeFn
+            attr: opt.defaultAttr
           });
           item.set(opt.defaultAttr, $inputEl.val());
           if (!item.isValid()) {

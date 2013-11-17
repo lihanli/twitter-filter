@@ -60,16 +60,17 @@
       }
     },
     generateModelWithSanitizer: function(opt) {
-      var model;
+      var model, sanitizeFn;
       if (opt == null) {
         opt = {};
       }
       model = new opt.Model();
+      sanitizeFn = opt.sanitizeFn || opt.Model["sanitize" + (util.capitalize(opt.attr))];
       model.on("change:" + opt.attr, function(__, val, changeOpt) {
         if (changeOpt.noSanitize) {
           return;
         }
-        return model.set(opt.attr, opt.sanitizeFn(val), {
+        return model.set(opt.attr, sanitizeFn(val), {
           noSanitize: true
         });
       });
@@ -103,6 +104,10 @@
 
   models.FilteredUser.sanitizeScreenName = function(screenName) {
     return $.trim(screenName).replace(/\W/g, '').toLowerCase();
+  };
+
+  models.FilteredPhrase.sanitizePhrase = function(phrase) {
+    return $.trim(phrase);
   };
 
   models.FilteredUsers.prototype.model = models.FilteredUser;
