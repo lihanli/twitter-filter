@@ -39,6 +39,7 @@ window.models =
       false
 
   generateModelWithSanitizer: (opt = {}) ->
+    # TODO get list of sanitizers using _.keys and regex
     model = new opt.Model()
     sanitizeFn = opt.sanitizeFn || opt.Model["sanitize#{util.capitalize(opt.attr)}"]
 
