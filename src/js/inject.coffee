@@ -154,5 +154,3 @@ if location.host == 'twitter.com'
       addClickHandlers()
       filterCurrentPage()
   )()
-
-
