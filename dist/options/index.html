@@ -28,7 +28,15 @@
       </div>
 
       <h3>Filtered users</h3>
-      <ul class="filtered-users">
+
+      <div class="checkbox">
+        <label data-toggle="tooltip" title="Any tweet which mentions a filtered user will also be hidden">
+          <input class="hide-mentions-input" type="checkbox" value="hideMentions">
+          Hide mentions
+        </label>
+      </div>
+
+      <ul class="filtered-users list-unstyled">
       </ul>
       <input class="form-control filtered-users-input" type="text" placeholder="Add user" />
 
@@ -36,7 +44,7 @@
         Filtered text
       </h3>
 
-      <ul class="filtered-phrases">
+      <ul class="filtered-phrases list-unstyled">
       </ul>
       <input class="form-control filtered-phrases-input" type="text" placeholder="Add word/phrase" />
     </div>
