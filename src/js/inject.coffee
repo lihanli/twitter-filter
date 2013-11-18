@@ -1,6 +1,7 @@
 if location.host == 'twitter.com'
   # can't cache dom elements because they become invalid when user changes pages
-  rclass = /[\n\t]/g
+  RCLASS = /[\n\t]/g
+  CONVERSATION_CHILDREN = ['.missing-tweets-bar', '.conversation-header']
   filteredUsers = null
   filteredPhrases = null
   options = null
@@ -36,7 +37,7 @@ if location.host == 'twitter.com'
 
   hasClass = (el, selector) ->
     className = " " + selector + " "
-    return true  if (" " + el.className + " ").replace(rclass, " ").indexOf(className) > -1
+    return true  if (" " + el.className + " ").replace(RCLASS, " ").indexOf(className) > -1
     false
 
   filterCurrentPage = ->
@@ -50,20 +51,18 @@ if location.host == 'twitter.com'
     hideCompletely = options.get('hideCompletely')
 
     removeConversationModule = ($el) ->
-      # remove the blue lines
-      $el.parents('ol.conversation-module').removeClass('conversation-module')
+      # disable the entire conversation module
+      module = $el.parents('ol.conversation-module')
+      return if module.length == 0
+      module.removeClass('conversation-module')
 
-    if hideCompletely
-      # hide the conversation module things for filtered users
-      _.each ['.missing-tweets-bar', '.conversation-header'], (klass) ->
-        $els.find(klass).each ->
-          $this = $(@)
-          # remove previous changes
-          $this.show()
+      _.each CONVERSATION_CHILDREN, (klass) ->
+        module.find(klass).hide()
 
-          if filteredUsers.findByScreenName($this.find('a').attr('href').split('/')[1])
-            $this.hide()
-            removeConversationModule($this)
+    # remove previous changes
+    _.each CONVERSATION_CHILDREN, (klass) ->
+      $els.find(klass).show()
+    $els.parents('ol[data-ancestors]').addClass('conversation-module')
 
     $els.find('.tweet').each ->
       $this = $(@)
