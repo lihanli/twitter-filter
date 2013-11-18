@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "devDependencies": {
-    "coffee-script":  "=1.6.3"
+    "coffee-script":  "=1.6.3",
+    "uglify-js": "=2.4.3"
   }
 }
