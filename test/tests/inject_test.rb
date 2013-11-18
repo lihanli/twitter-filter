@@ -40,6 +40,11 @@ class InjectTest < CapybaraTestCase
     click_show_tweet
     assert_tweet_not_filtered
 
+    # mutation observer will run filter on simple tweets
+    first('.tweet').click
+    assert_has_css('.simple-tweet .tf-el')
+    first('.tweet').click
+
     # mutation observer will filter expanded conversations
     click('.missing-tweets-bar')
     all('.tweet').each_with_index do |tweet, i|
@@ -48,9 +53,10 @@ class InjectTest < CapybaraTestCase
     end
 
     # make new tweet
+    click_show_tweet
     click('#global-new-tweet-button')
     has_css?('#tweet-box-global', visible: true)
-    page.execute_script("jQuery('#tweet-box-global').text('hello')")
+    page.execute_script("jQuery('#tweet-box-global').text('zzzzz')")
     click('.tweet-action')
     assert_first_tweet_filtered
 
