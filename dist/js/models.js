@@ -107,7 +107,7 @@
   };
 
   models.FilteredPhrase.sanitizePhrase = function(phrase) {
-    return $.trim(phrase);
+    return $.trim(phrase).toLowerCase();
   };
 
   models.FilteredUsers.prototype.model = models.FilteredUser;

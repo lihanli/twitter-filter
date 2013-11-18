@@ -14,8 +14,14 @@ if location.host == 'twitter.com'
       _.pick(@, 'screenName')
 
     shouldHide: ->
+      lowercaseText = @text.toLowerCase()
       @hidden = (->
         return true if filteredUsers.findByScreenName(@screenName)
+
+        for phrase in filteredPhrases.models
+          return true unless lowercaseText.indexOf(phrase.get('phrase')) == -1
+
+        false
       ).apply(@, arguments)
 
     @getCachedTweet: ($el) ->

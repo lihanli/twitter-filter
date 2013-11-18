@@ -18,10 +18,21 @@
       };
 
       Tweet.prototype.shouldHide = function() {
+        var lowercaseText;
+        lowercaseText = this.text.toLowerCase();
         return this.hidden = (function() {
+          var phrase, _i, _len, _ref;
           if (filteredUsers.findByScreenName(this.screenName)) {
             return true;
           }
+          _ref = filteredPhrases.models;
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            phrase = _ref[_i];
+            if (lowercaseText.indexOf(phrase.get('phrase')) !== -1) {
+              return true;
+            }
+          }
+          return false;
         }).apply(this, arguments);
       };
 

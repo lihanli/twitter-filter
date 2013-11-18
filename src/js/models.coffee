@@ -69,7 +69,7 @@ window.models =
 models.FilteredUser.sanitizeScreenName = (screenName) ->
   $.trim(screenName).replace(/\W/g, '').toLowerCase()
 models.FilteredPhrase.sanitizePhrase = (phrase) ->
-  $.trim(phrase)
+  $.trim(phrase).toLowerCase()
 
 models.FilteredUsers.prototype.model = models.FilteredUser
 models.FilteredPhrases.prototype.model = models.FilteredPhrase
