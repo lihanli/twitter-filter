@@ -57,6 +57,10 @@ class CapybaraTestCase < MiniTest::Unit::TestCase
     page.driver.browser.switch_to.alert.accept
   end
 
+  def remove_all_filters
+    all('.close').each(&:click)
+  end
+
   def set_input_and_press_enter(el, val)
     el.set(val)
     el.native.send_keys(:return)

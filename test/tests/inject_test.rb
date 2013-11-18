@@ -24,11 +24,16 @@ class InjectTest < CapybaraTestCase
 
   def test
     visit_options_page
-    add_filtered_user(@twitter_user[:screen_name])
-
+    add_filtered_phrase('dog')
     login_twitter(@twitter_user[:screen_name], @twitter_user[:password])
     visit('http://twitter.com')
-    sleep 2 # who to follow popup will occassionally trigger mutation
+    assert_first_tweet_filtered
+
+    visit_options_page
+    remove_all_filters
+    add_filtered_user(@twitter_user[:screen_name])
+    visit('http://twitter.com')
+    sleep 2 # the suggested users popup will trigger mutation event
 
     # tweet filtered
     assert_first_tweet_filtered
