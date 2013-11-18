@@ -22,8 +22,10 @@ class OptionsTest < CapybaraTestCase
     assert_equal('', get_val('.filtered-users-input'))
     # shows saved alert
     assert_settings_saved_alert
-    # whitespace gets trimmed
-    assert_text('@dog', find('.screen-name'))
+    # test added entry
+    screen_name_el = find('.screen-name')
+    assert_text('@dog', screen_name_el)
+    assert_equal('http://twitter.com/dog', screen_name_el[:href])
     # duplicates don't get added
     add_filtered_user('dog')
     assert_equal(1, user_count)

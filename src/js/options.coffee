@@ -23,7 +23,7 @@ showSettingsSaved = ->
 _.each
   filteredUsers:
     template: (screenNameEscaped) ->
-      "<span class='screen-name'>@#{screenNameEscaped}</span>"
+      "<a href='http://twitter.com/#{screenNameEscaped}' target='_blank' class='screen-name'>@#{screenNameEscaped}</a>"
     defaultAttr: 'screenName'
 
   filteredPhrases:

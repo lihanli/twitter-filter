@@ -25,7 +25,7 @@
   _.each({
     filteredUsers: {
       template: function(screenNameEscaped) {
-        return "<span class='screen-name'>@" + screenNameEscaped + "</span>";
+        return "<a href='http://twitter.com/" + screenNameEscaped + "' target='_blank' class='screen-name'>@" + screenNameEscaped + "</a>";
       },
       defaultAttr: 'screenName'
     },
