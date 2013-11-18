@@ -43,7 +43,8 @@
     Options: Backbone.Model.extend({
       defaults: {
         hideCompletely: false,
-        enable: true
+        enable: true,
+        hideMentions: false
       }
     }),
     checkDuplicates: function(model, attr) {

@@ -28,6 +28,7 @@ window.models =
     defaults:
       hideCompletely: false
       enable: true
+      hideMentions: false
 
   checkDuplicates: (model, attr) ->
     @any (_model) ->

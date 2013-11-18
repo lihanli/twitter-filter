@@ -10,7 +10,8 @@
     optionsBox: $('.options-box'),
     enableInput: $('.enable-input'),
     filteredPhrases: $('.filtered-phrases'),
-    filteredPhrasesInput: $('.filtered-phrases-input')
+    filteredPhrasesInput: $('.filtered-phrases-input'),
+    hideMentionsInput: $('.hide-mentions-input')
   };
 
   showSettingsSaved = function() {
@@ -89,7 +90,8 @@
       hideCompletely: null,
       enable: function(val) {
         return dom.optionsBox[val ? 'show' : 'hide']();
-      }
+      },
+      hideMentions: null
     };
     _.each(checkBoxes, function(cb, attr) {
       var $el;

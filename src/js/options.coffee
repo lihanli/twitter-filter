@@ -7,6 +7,7 @@ dom =
   enableInput: $('.enable-input')
   filteredPhrases: $('.filtered-phrases')
   filteredPhrasesInput: $('.filtered-phrases-input')
+  hideMentionsInput: $('.hide-mentions-input')
 
 showSettingsSaved = ->
   alertEl = $("""
@@ -76,6 +77,7 @@ chrome.extension.sendMessage options: null, (res) ->
     hideCompletely: null
     enable: (val) ->
       dom.optionsBox[if val then 'show' else 'hide']()
+    hideMentions: null
 
   _.each checkBoxes, (cb, attr) ->
     $el = dom["#{attr}Input"]
