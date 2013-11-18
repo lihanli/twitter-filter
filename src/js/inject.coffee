@@ -15,11 +15,18 @@ if location.host == 'twitter.com'
 
     shouldHide: ->
       lowercaseText = @text.toLowerCase()
+      allFilteredPhrases = filteredPhrases.map (filteredPhrase) ->
+        filteredPhrase.get('phrase')
+
+      if options.get('hideMentions')
+        filteredUsers.each (filteredUser) ->
+          allFilteredPhrases.push("@#{filteredUser.get('screenName')}")
+
       @hidden = (->
         return true if filteredUsers.findByScreenName(@screenName)
 
-        for phrase in filteredPhrases.models
-          return true unless lowercaseText.indexOf(phrase.get('phrase')) == -1
+        for phrase in allFilteredPhrases
+          return true unless lowercaseText.indexOf(phrase) == -1
 
         false
       ).apply(@, arguments)

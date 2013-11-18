@@ -18,17 +18,24 @@
       };
 
       Tweet.prototype.shouldHide = function() {
-        var lowercaseText;
+        var allFilteredPhrases, lowercaseText;
         lowercaseText = this.text.toLowerCase();
+        allFilteredPhrases = filteredPhrases.map(function(filteredPhrase) {
+          return filteredPhrase.get('phrase');
+        });
+        if (options.get('hideMentions')) {
+          filteredUsers.each(function(filteredUser) {
+            return allFilteredPhrases.push("@" + (filteredUser.get('screenName')));
+          });
+        }
         return this.hidden = (function() {
-          var phrase, _i, _len, _ref;
+          var phrase, _i, _len;
           if (filteredUsers.findByScreenName(this.screenName)) {
             return true;
           }
-          _ref = filteredPhrases.models;
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            phrase = _ref[_i];
-            if (lowercaseText.indexOf(phrase.get('phrase')) !== -1) {
+          for (_i = 0, _len = allFilteredPhrases.length; _i < _len; _i++) {
+            phrase = allFilteredPhrases[_i];
+            if (lowercaseText.indexOf(phrase) !== -1) {
               return true;
             }
           }
