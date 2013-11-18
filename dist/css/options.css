@@ -12,3 +12,6 @@ input[type="text"] {
 
 .hidden-light {
   display: none; }
+
+[data-toggle="tooltip"] {
+  display: inline-block; }
