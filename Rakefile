@@ -21,6 +21,11 @@ task :build do
   build_css
 end
 
+task :dist do
+  system('rm build.zip')
+  system('zip -r build.zip . -x ./src/**\* ./.git/**\* ./test/**\* ./node_modules/**\*')
+end
+
 task watch: [:build] do
   require 'listen'
 
