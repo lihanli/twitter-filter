@@ -77,8 +77,23 @@ class InjectTest < CapybaraTestCase
       assert_first_tweet_filtered
     end.()
 
+    # test hide mentions
+    visit_options_page
+    clear_filtered_users
+    add_filtered_user('garfield')
+    click('.hide-mentions-input')
+
+    visit('http://twitter.com')
+    filtered_tweet = all('.tweet').last
+    assert_text_include('filtered', filtered_tweet)
+
+    filtered_tweet.find('a').click
+    assert_text_include('@garfield', filtered_tweet)
+
     # test hide completely
     visit_options_page
+    clear_filtered_users
+    add_filtered_user(@twitter_user[:screen_name])
     click('.hide-completely-input')
     assert_settings_saved_alert
 
