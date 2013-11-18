@@ -154,11 +154,12 @@ if location.host == 'twitter.com'
       observer = new MutationObserver (mutations) ->
         mutations.forEach (mutation) ->
           {addedNodes} = mutation
-          if addedNodes.length > 0 && hasClass(addedNodes[0], 'stream-item')
+          if addedNodes.length > 0 && (hasClass(addedNodes[0], 'stream-item') || hasClass(addedNodes[0], 'conversation-tweet-item'))
             filterTweets(addedNodes)
 
       observer.observe document.querySelector('.stream-items'),
         childList: true
+        subtree: true
 
     addClickHandlers = ->
       $('.stream-container').on 'click', '.tweet .toggle-hide', ->

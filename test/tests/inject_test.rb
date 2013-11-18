@@ -40,6 +40,13 @@ class InjectTest < CapybaraTestCase
     click_show_tweet
     assert_tweet_not_filtered
 
+    # mutation observer will filter expanded conversations
+    click('.missing-tweets-bar')
+    all('.tweet').each_with_index do |tweet, i|
+      next if i == 0
+      assert_text_include('filtered', tweet)
+    end
+
     # make new tweet
     click('#global-new-tweet-button')
     has_css?('#tweet-box-global', visible: true)

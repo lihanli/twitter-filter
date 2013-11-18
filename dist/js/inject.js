@@ -173,13 +173,14 @@
           return mutations.forEach(function(mutation) {
             var addedNodes;
             addedNodes = mutation.addedNodes;
-            if (addedNodes.length > 0 && hasClass(addedNodes[0], 'stream-item')) {
+            if (addedNodes.length > 0 && (hasClass(addedNodes[0], 'stream-item') || hasClass(addedNodes[0], 'conversation-tweet-item'))) {
               return filterTweets(addedNodes);
             }
           });
         });
         return observer.observe(document.querySelector('.stream-items'), {
-          childList: true
+          childList: true,
+          subtree: true
         });
       };
       addClickHandlers = function() {
