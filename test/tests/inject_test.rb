@@ -24,7 +24,7 @@ class InjectTest < CapybaraTestCase
 
   def test
     visit_options_page
-    add_filtered_phrase('dog')
+    add_filtered_phrase('dog dog')
     login_twitter(@twitter_user[:screen_name], @twitter_user[:password])
     visit('http://twitter.com')
     assert_first_tweet_filtered
