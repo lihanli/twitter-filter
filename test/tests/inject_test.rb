@@ -105,7 +105,7 @@ class InjectTest < CapybaraTestCase
     assert_settings_saved_alert
 
     visit_twitter_and_remove_promoted
-    tweet_classes = %w(.tweet .conversation-module .missing-tweets-bar)
+    tweet_classes = %w(.tweet .conversation-module .missing-tweets-bar .conversation-header)
     tweet_classes.each do |selector|
       assert_has_no_css(selector)
     end
