@@ -1,6 +1,6 @@
 {
   "name": "Feed filter",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "manifest_version": 2,
   "description": "Hide tweets without blocking people",
 
@@ -25,13 +25,12 @@
   },
 
   "permissions": [
-    "tabs",
-    "https://www.twitter.com/*"
+    "tabs"
   ],
 
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
+      "matches": ["https://twitter.com/*", "https://www.twitter.com/*"],
       "css": [
         "dist/css/inject.css"
       ],
