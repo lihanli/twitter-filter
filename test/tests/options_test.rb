@@ -33,7 +33,7 @@ class OptionsTest < CapybaraTestCase
 
     # test filtered phrases
     add_filtered_phrase('  ')
-    add_filtered_phrase(' dog ')
+    add_filtered_phrase(' Dog ')
     assert_settings_saved_alert
     add_filtered_phrase('dog')
     assert_equal(1, all('.filtered-phrases li').size)
