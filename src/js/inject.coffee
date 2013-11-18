@@ -2,6 +2,7 @@ if location.host == 'twitter.com'
   # can't cache dom elements because they become invalid when user changes pages
   rclass = /[\n\t]/g
   filteredUsers = null
+  filteredPhrases = null
   options = null
 
   class Tweet
@@ -99,6 +100,9 @@ if location.host == 'twitter.com'
     if options.get('enable')
       pageWatcher()
 
+      filteredUsersDeferred = $.Deferred()
+      filteredPhrasesDeferred = $.Deferred()
+
       chrome.extension.sendMessage filteredUsers: null, (res) ->
         filteredUsers = models.generateCollection
           collectionName: 'FilteredUsers'
@@ -106,6 +110,16 @@ if location.host == 'twitter.com'
           anyChangeCb: ->
             filterCurrentPage()
 
+        filteredUsersDeferred.resolve()
+
+      chrome.extension.sendMessage filteredPhrases: null, (res) ->
+        filteredPhrases = models.generateCollection
+          collectionName: 'FilteredPhrases'
+          data: res.filteredPhrases
+
+        filteredPhrasesDeferred.resolve()
+
+      $.when(filteredUsersDeferred, filteredPhrasesDeferred).then ->
         setupPage()
 
   pageWatcher = ->
