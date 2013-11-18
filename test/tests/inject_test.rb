@@ -19,20 +19,20 @@ class InjectTest < CapybaraTestCase
   end
 
   def assert_tweet_not_filtered
-    wait_until { get_js("$($('.tweet:visible')[0]).text()").include?('dog dog') }
+    wait_until { get_js("$($('.tweet:visible')[0]).text()").include?('hello') }
   end
 
   def test
     visit_options_page
-    add_filtered_phrase('dog dog')
+    add_filtered_phrase('hello')
     login_twitter(@twitter_user[:screen_name], @twitter_user[:password])
-    visit('http://twitter.com')
+    visit_twitter_and_remove_promoted
     assert_first_tweet_filtered
 
     visit_options_page
     remove_all_filters
     add_filtered_user(@twitter_user[:screen_name])
-    visit('http://twitter.com')
+    visit_twitter_and_remove_promoted
     sleep 2 # the suggested users popup will trigger mutation event
 
     # tweet filtered
@@ -90,8 +90,8 @@ class InjectTest < CapybaraTestCase
     add_filtered_user('garfield')
     click('.hide-mentions-input')
 
-    visit('http://twitter.com')
-    filtered_tweet = all('.tweet').last
+    visit_twitter_and_remove_promoted
+    filtered_tweet = first('.tweet')
     assert_text_include('filtered', filtered_tweet)
 
     filtered_tweet.find('a').click
@@ -104,7 +104,7 @@ class InjectTest < CapybaraTestCase
     click('.hide-completely-input')
     assert_settings_saved_alert
 
-    visit('http://twitter.com')
+    visit_twitter_and_remove_promoted
     tweet_classes = %w(.tweet .conversation-module .missing-tweets-bar)
     tweet_classes.each do |selector|
       assert_has_no_css(selector)
@@ -112,7 +112,7 @@ class InjectTest < CapybaraTestCase
 
     visit_options_page
     click('.enable-input')
-    visit('http://twitter.com')
+    visit_twitter_and_remove_promoted
     assert_has_no_css('.tf-el')
 
     tweet_classes.each do |selector|

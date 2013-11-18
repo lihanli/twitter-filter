@@ -171,10 +171,13 @@
         }
         observer = new MutationObserver(function(mutations) {
           return mutations.forEach(function(mutation) {
-            var addedNodes;
+            var addedNodes, firstAdded;
             addedNodes = mutation.addedNodes;
-            if (addedNodes.length > 0 && (hasClass(addedNodes[0], 'stream-item') || hasClass(addedNodes[0], 'conversation-tweet-item'))) {
-              return filterTweets(addedNodes);
+            firstAdded = addedNodes[0];
+            if (addedNodes.length > 0) {
+              if (hasClass(firstAdded, 'stream-item') || hasClass(firstAdded, 'conversation-tweet-item') || (firstAdded.tagName === 'LI' && firstAdded.children.length > 0 && hasClass(firstAdded.children[0], 'tweet'))) {
+                return filterTweets(addedNodes);
+              }
             }
           });
         });
