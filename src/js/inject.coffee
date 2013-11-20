@@ -105,32 +105,23 @@ filterTweets = (els) ->
 
       $el.hide().after(replacement)
 
-chrome.extension.sendMessage options: null, (res) ->
+chrome.storage.sync.get options: {}, (res) ->
   options = new models.Options(res.options)
 
   if options.get('enable')
     pageWatcher()
 
-    filteredUsersDeferred = $.Deferred()
-    filteredPhrasesDeferred = $.Deferred()
-
-    chrome.extension.sendMessage filteredUsers: null, (res) ->
+    chrome.storage.sync.get ['filteredUsers', 'filteredPhrases'], (res) ->
       filteredUsers = models.generateCollection
         collectionName: 'FilteredUsers'
         data: res.filteredUsers
         anyChangeCb: ->
           filterCurrentPage()
 
-      filteredUsersDeferred.resolve()
-
-    chrome.extension.sendMessage filteredPhrases: null, (res) ->
       filteredPhrases = models.generateCollection
         collectionName: 'FilteredPhrases'
         data: res.filteredPhrases
 
-      filteredPhrasesDeferred.resolve()
-
-    $.when(filteredUsersDeferred, filteredPhrasesDeferred).then ->
       setupPage()
 
 pageWatcher = ->

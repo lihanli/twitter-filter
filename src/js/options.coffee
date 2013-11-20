@@ -29,9 +29,7 @@ _.each
   filteredPhrases:
     defaultAttr: 'phrase'
 , (opt, dataName) ->
-  req = {}
-  req[dataName] = null
-  chrome.extension.sendMessage req, (res) ->
+  chrome.storage.sync.get dataName, (res) ->
     $collectionEl = dom[dataName]
     dataNameCapitalized = util.capitalize(dataName)
 
@@ -71,7 +69,7 @@ _.each
         collection.add(item)
     )()
 
-chrome.extension.sendMessage options: null, (res) ->
+chrome.storage.sync.get options: {}, (res) ->
   options = new models.Options(res.options)
   checkBoxes =
     hideCompletely: null

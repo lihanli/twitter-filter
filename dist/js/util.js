@@ -33,7 +33,7 @@
       var req;
       req = {};
       req[key] = model.toJSON();
-      return chrome.extension.sendMessage(req);
+      return chrome.storage.sync.set(req);
     },
     highlight: function($el) {
       return $el.effect('highlight', {

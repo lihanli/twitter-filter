@@ -92,7 +92,7 @@
         cb = _ref[evt];
         collection.on(evt, cb);
       }
-      collection.add(util.convertToBackboneArr(Collection.prototype.model, opt.data));
+      collection.add(util.convertToBackboneArr(Collection.prototype.model, opt.data || []));
       collection.on('change reset add remove', function() {
         util.saveToBg(util.uncapitalize(opt.collectionName), collection);
         if (opt.anyChangeCb) {

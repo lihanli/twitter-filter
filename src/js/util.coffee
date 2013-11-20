@@ -22,7 +22,7 @@ root.util =
   saveToBg: (key, model) ->
     req = {}
     req[key] = model.toJSON()
-    chrome.extension.sendMessage(req)
+    chrome.storage.sync.set(req)
 
   highlight: ($el) ->
     $el.effect('highlight', { color: '#A9F5BC' }, 500)

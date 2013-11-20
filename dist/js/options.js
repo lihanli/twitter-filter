@@ -33,10 +33,7 @@
       defaultAttr: 'phrase'
     }
   }, function(opt, dataName) {
-    var req;
-    req = {};
-    req[dataName] = null;
-    return chrome.extension.sendMessage(req, function(res) {
+    return chrome.storage.sync.get(dataName, function(res) {
       var $collectionEl, collection, dataNameCapitalized;
       $collectionEl = dom[dataName];
       dataNameCapitalized = util.capitalize(dataName);
@@ -81,8 +78,8 @@
     });
   });
 
-  chrome.extension.sendMessage({
-    options: null
+  chrome.storage.sync.get({
+    options: {}
   }, function(res) {
     var checkBoxes, options;
     options = new models.Options(res.options);

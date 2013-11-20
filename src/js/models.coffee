@@ -59,7 +59,7 @@ window.models =
     for evt, cb of opt.events
       collection.on(evt, cb)
 
-    collection.add(util.convertToBackboneArr(Collection.prototype.model, opt.data))
+    collection.add(util.convertToBackboneArr(Collection.prototype.model, opt.data || []))
 
     collection.on 'change reset add remove', ->
       util.saveToBg(util.uncapitalize(opt.collectionName), collection)
