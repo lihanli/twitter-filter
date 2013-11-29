@@ -27,26 +27,38 @@
         </label>
       </div>
 
-      <h3>Filtered users</h3>
+      <div class="well">
+        <legend class="margin-0">Filtered users</legend>
+        <div class="vertical-spacer-10"></div>
 
-      <div class="checkbox">
-        <label data-toggle="tooltip" title="Any tweet which mentions a filtered user will also be hidden">
-          <input class="hide-mentions-input" type="checkbox" value="hideMentions">
-          Hide mentions
-        </label>
+        <div class="checkbox margin-0">
+          <label data-toggle="tooltip" title="Any tweet which mentions a filtered user will also be hidden">
+            <input class="hide-mentions-input" type="checkbox" value="hideMentions">
+            Hide mentions
+          </label>
+        </div>
+        <div class="vertical-spacer-10"></div>
+
+        <ul class="filtered-users list-unstyled">
+        </ul>
+
+        <div class="input-group">
+          <span class="input-group-addon">@</span>
+          <input type="text" class="form-control filtered-users-input" placeholder="Add user" />
+        </div>
       </div>
 
-      <ul class="filtered-users list-unstyled">
-      </ul>
-      <input class="form-control filtered-users-input" type="text" placeholder="Add user" />
+      <div class="well">
+        <legend class="margin-0" data-toggle="tooltip" title="Filtered text is case insensitive">
+          Filtered text
+        </legend>
+        <div class="vertical-spacer-10"></div>
 
-      <h3 data-toggle="tooltip" title="Filtered text is case insensitive">
-        Filtered text
-      </h3>
+        <ul class="filtered-phrases list-unstyled">
+        </ul>
 
-      <ul class="filtered-phrases list-unstyled">
-      </ul>
-      <input class="form-control filtered-phrases-input" type="text" placeholder="Add word/phrase" />
+        <input class="form-control filtered-phrases-input" type="text" placeholder="Add word/phrase" />
+      </div>
     </div>
   </div>
 

@@ -1,8 +1,32 @@
+.horizontal-spacer-5 {
+  padding-left: 5px;
+  display: inline-block; }
+
+.horizontal-spacer-10 {
+  padding-left: 10px;
+  display: inline-block; }
+
+.horizontal-spacer-15 {
+  padding-left: 15px;
+  display: inline-block; }
+
+.vertical-spacer-5 {
+  padding-top: 5px; }
+
+.vertical-spacer-10 {
+  padding-top: 10px; }
+
+.vertical-spacer-15 {
+  padding-top: 15px; }
+
+.vertical-spacer-20 {
+  padding-top: 20px; }
+
+.vertical-spacer-25 {
+  padding-top: 25px; }
+
 h1 {
   margin-bottom: 20px; }
-
-input[type="text"] {
-  width: 200px; }
 
 .filtered-user-input {
   margin-bottom: 15px; }
@@ -18,3 +42,9 @@ input[type="text"] {
 
 .alert .glyphicon {
   margin-right: 5px; }
+
+.margin-0 {
+  margin: 0; }
+
+.well {
+  width: 300px; }
