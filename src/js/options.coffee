@@ -8,6 +8,7 @@ dom =
   filteredPhrases: $('.filtered-phrases')
   filteredPhrasesInput: $('.filtered-phrases-input')
   hideMentionsInput: $('.hide-mentions-input')
+  body: $('body')
 
 showSettingsSaved = ->
   alertEl = $("""
@@ -97,3 +98,6 @@ chrome.storage.sync.get options: {}, (res) ->
     showSettingsSaved()
 
 $('[data-toggle="tooltip"]').tooltip()
+
+if navigator.platform.match(/^Win/)
+  dom.body.addClass('windows')

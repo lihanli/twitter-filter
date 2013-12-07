@@ -11,7 +11,8 @@
     enableInput: $('.enable-input'),
     filteredPhrases: $('.filtered-phrases'),
     filteredPhrasesInput: $('.filtered-phrases-input'),
-    hideMentionsInput: $('.hide-mentions-input')
+    hideMentionsInput: $('.hide-mentions-input'),
+    body: $('body')
   };
 
   showSettingsSaved = function() {
@@ -113,5 +114,9 @@
   });
 
   $('[data-toggle="tooltip"]').tooltip();
+
+  if (navigator.platform.match(/^Win/)) {
+    dom.body.addClass('windows');
+  }
 
 }).call(this);

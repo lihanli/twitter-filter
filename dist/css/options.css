@@ -53,3 +53,6 @@ h1 {
     float: none;
     top: -4px;
     right: -16px; }
+
+.windows .close-box .close {
+  top: -1px; }
