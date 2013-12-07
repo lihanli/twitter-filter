@@ -19,10 +19,6 @@ h1 {
   margin-bottom: 15px;
 }
 
-.close {
-  float: none;
-}
-
 .hidden-light {
   display: none;
 }
@@ -41,4 +37,15 @@ h1 {
 
 .well {
   width: 300px;
+}
+
+.close-box {
+  position: relative;
+
+  .close {
+    position: absolute;
+    float: none;
+    top: -4px;
+    right: -16px;
+  }
 }

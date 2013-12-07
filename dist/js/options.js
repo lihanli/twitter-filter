@@ -46,7 +46,7 @@
             var attrEscaped, el, template;
             attrEscaped = _.escape(item.get(opt.defaultAttr));
             template = opt.template ? opt.template(attrEscaped) : attrEscaped;
-            el = $("<li>\n  " + template + "\n  <a class=\"close\">&times;</a>\n</li>").data('model', item);
+            el = $("<li class=\"filtered-item\">\n  " + template + "\n  <span class=\"close-box\">\n    <a class=\"close\">&times;</a>\n  </span>\n</li>").data('model', item);
             return $collectionEl.append(el);
           },
           remove: function(__, ___, opt) {

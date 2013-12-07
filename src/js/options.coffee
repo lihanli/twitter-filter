@@ -42,9 +42,11 @@ _.each
           attrEscaped = _.escape(item.get(opt.defaultAttr))
           template = if opt.template then opt.template(attrEscaped) else attrEscaped
           el = $("""
-            <li>
+            <li class="filtered-item">
               #{template}
-              <a class="close">&times;</a>
+              <span class="close-box">
+                <a class="close">&times;</a>
+              </span>
             </li>
           """).data('model', item)
 
