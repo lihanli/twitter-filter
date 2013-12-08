@@ -1,8 +1,7 @@
 window.models =
   FilteredUser: Backbone.Model.extend
     validate: ->
-      msg = models.validations.presence.call(@, 'screenName')
-      return msg if msg
+      models.validations.presence.call(@, 'screenName')
 
   FilteredUsers: Backbone.Collection.extend
     add: (filteredUser) ->
@@ -15,8 +14,7 @@ window.models =
 
   FilteredPhrase: Backbone.Model.extend
     validate: ->
-      msg = models.validations.presence.call(@, 'phrase')
-      return msg if msg
+      models.validations.presence.call(@, 'phrase')
 
   FilteredPhrases: Backbone.Collection.extend
     add: (filteredPhrase) ->

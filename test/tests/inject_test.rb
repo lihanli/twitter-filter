@@ -47,6 +47,7 @@ class InjectTest < CapybaraTestCase
 
     # mutation observer will filter expanded conversations
     click('.missing-tweets-bar')
+    sleep 0.5
     all('.tweet').each_with_index do |tweet, i|
       next if i == 0
       assert_text_include('filtered', tweet)
