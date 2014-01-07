@@ -19,12 +19,12 @@ class InjectTest < CapybaraTestCase
   end
 
   def assert_tweet_not_filtered
-    wait_until { get_js("$($('.tweet:visible')[0]).text()").include?('hello') }
+    wait_until { get_js("$($('.tweet:visible')[0]).text()").include?('reply4') }
   end
 
   def test
     visit_options_page
-    add_filtered_phrase('hello')
+    add_filtered_phrase('reply4')
     login_twitter(@twitter_user[:screen_name], @twitter_user[:password])
     visit_twitter_and_remove_promoted
     assert_first_tweet_filtered
@@ -41,9 +41,10 @@ class InjectTest < CapybaraTestCase
     assert_tweet_not_filtered
 
     # mutation observer will run filter on simple tweets
-    first('.tweet').click
+    send_keyboard_shortcut('gp')
+    all('.tweet')[1].click
     assert_has_css('.simple-tweet .tf-el')
-    first('.tweet').click
+    send_keyboard_shortcut('gh')
 
     # mutation observer will filter expanded conversations
     click('.missing-tweets-bar')
@@ -73,7 +74,6 @@ class InjectTest < CapybaraTestCase
     assert_has_no_css('.tf-el')
 
     send_keyboard_shortcut('gh')
-    wait_until { current_path == '/' }
     # test that click handler still works after page change
     sleep 1
     click_show_tweet
@@ -97,7 +97,7 @@ class InjectTest < CapybaraTestCase
     add_filtered_user('garfield')
     click('.hide-mentions-input')
 
-    visit_twitter_and_remove_promoted
+    visit("https://twitter.com/#{@twitter_user[:screen_name]}")
     filtered_tweet = first('.tweet')
     assert_text_include('filtered', filtered_tweet)
 

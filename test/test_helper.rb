@@ -72,7 +72,9 @@ class CapybaraTestCase < MiniTest::Unit::TestCase
   end
 
   def send_keyboard_shortcut(shortcut)
+    old_path = current_path
     find('body').native.send_keys(shortcut)
+    wait_until { current_path != old_path }
   end
 
   def login_twitter(username_or_email, password)
