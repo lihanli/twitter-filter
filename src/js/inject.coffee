@@ -142,7 +142,7 @@ setupPage = (->
     observer.disconnect() if observer
 
     observer = new MutationObserver (mutations) ->
-      mutations.forEach (mutation) ->
+      for mutation in mutations
         {addedNodes} = mutation
         firstAdded = addedNodes[0]
 
