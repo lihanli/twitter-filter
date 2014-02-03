@@ -3,11 +3,7 @@
   window.models = {
     FilteredUser: Backbone.Model.extend({
       validate: function() {
-        var msg;
-        msg = models.validations.presence.call(this, 'screenName');
-        if (msg) {
-          return msg;
-        }
+        return models.validations.presence.call(this, 'screenName');
       }
     }),
     FilteredUsers: Backbone.Collection.extend({
@@ -25,11 +21,7 @@
     }),
     FilteredPhrase: Backbone.Model.extend({
       validate: function() {
-        var msg;
-        msg = models.validations.presence.call(this, 'phrase');
-        if (msg) {
-          return msg;
-        }
+        return models.validations.presence.call(this, 'phrase');
       }
     }),
     FilteredPhrases: Backbone.Collection.extend({

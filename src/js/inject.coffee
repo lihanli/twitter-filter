@@ -77,7 +77,7 @@ filterTweets = (els) ->
       toHide.push
         $el: $this
 
-    $this.find('.account-group').after("""
+    $this.find('.stream-item-header .time').after("""
       <a class="toggle-hide tf-el">
         #{if tweet.hidden then 'Unhide' else 'Hide'}
       </a>
