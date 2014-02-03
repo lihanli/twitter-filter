@@ -148,6 +148,7 @@ setupPage = (->
            hasClass(firstAdded, 'conversation-tweet-item') ||
            (firstAdded.tagName == 'LI' && firstAdded.children.length > 0 && hasClass(firstAdded.children[0], 'tweet'))
           filterTweets(addedNodes)
+  observerCallback = _.throttle(observerCallback, 100)
 
   addObserver = ->
     observer.disconnect() if observer

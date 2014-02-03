@@ -1,6 +1,6 @@
 {
   "name": "Twitter Filter",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "manifest_version": 2,
   "description": "Hide people on Twitter without blocking or unfollowing them",
 
