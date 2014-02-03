@@ -138,21 +138,21 @@ pageWatcher = ->
 setupPage = (->
   observer = null
 
+  observerCallback = (mutations) ->
+    for mutation in mutations
+      {addedNodes} = mutation
+      firstAdded = addedNodes[0]
+
+      if addedNodes.length > 0
+        if hasClass(firstAdded, 'stream-item') ||
+           hasClass(firstAdded, 'conversation-tweet-item') ||
+           (firstAdded.tagName == 'LI' && firstAdded.children.length > 0 && hasClass(firstAdded.children[0], 'tweet'))
+          filterTweets(addedNodes)
+
   addObserver = ->
     observer.disconnect() if observer
-
-    observer = new MutationObserver (mutations) ->
-      for mutation in mutations
-        {addedNodes} = mutation
-        firstAdded = addedNodes[0]
-
-        if addedNodes.length > 0
-          if hasClass(firstAdded, 'stream-item') ||
-             hasClass(firstAdded, 'conversation-tweet-item') ||
-             (firstAdded.tagName == 'LI' && firstAdded.children.length > 0 && hasClass(firstAdded.children[0], 'tweet'))
-            filterTweets(addedNodes)
-
-    observer.observe document.querySelector('.stream-items'),
+    observer = new MutationObserver(observerCallback)
+    observer.observe document.getElementsByClassName('stream-items')[0],
       childList: true
       subtree: true
 
