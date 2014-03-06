@@ -6,7 +6,6 @@ end
 
 def build_js
   `node_modules/.bin/coffee -o dist/js -c src/js`
-  `node_modules/.bin/uglifyjs dist/js/inject.js -c -m -o dist/js/inject.js`
   puts 'js built'
 end
 
