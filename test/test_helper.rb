@@ -2,6 +2,7 @@ require 'wist'
 require 'capybara'
 require 'pry'
 require "minitest/autorun"
+require './test/config'
 
 Capybara.register_driver :chrome do |app|
   Capybara::Selenium::Driver.new(app,

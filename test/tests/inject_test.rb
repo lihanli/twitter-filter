@@ -4,10 +4,7 @@ class InjectTest < CapybaraTestCase
   def setup
     super
 
-    @twitter_user = {
-      screen_name: 'josephk92264943',
-      password: 'XLXIFtWB',
-    }
+    @twitter_user = CONFIG[:twitter]
   end
 
   def click_show_tweet(idx: 0)
