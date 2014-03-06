@@ -1,5 +1,4 @@
 # can't cache dom elements because they become invalid when user changes pages
-RCLASS = /[\n\t]/g
 CONVERSATION_CHILDREN = ['.missing-tweets-bar', '.conversation-header']
 filteredUsers = null
 filteredPhrases = null
@@ -35,9 +34,7 @@ class Tweet
     $el.data('tf-tweet')
 
 hasClass = (el, selector) ->
-  className = " " + selector + " "
-  return true  if (" " + el.className + " ").replace(RCLASS, " ").indexOf(className) > -1
-  false
+  el.classList.contains(selector)
 
 filterCurrentPage = ->
   filterTweets(document.querySelectorAll('.stream-items li'))
