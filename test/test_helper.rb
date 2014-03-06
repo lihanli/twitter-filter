@@ -66,9 +66,8 @@ class CapybaraTestCase < MiniTest::Unit::TestCase
     el.native.send_keys(:return)
   end
 
-  def visit_twitter_and_remove_promoted
-    visit('http://twitter.com')
-    page.execute_script("jQuery('.promoted-tweet').remove()")
+  def visit_twitter
+    visit("http://twitter.com/#{@twitter_user[:screen_name]}")
   end
 
   def send_keyboard_shortcut(shortcut)
