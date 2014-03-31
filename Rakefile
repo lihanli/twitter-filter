@@ -22,7 +22,7 @@ end
 
 task :dist do
   system('rm build.zip')
-  system('zip -r build.zip . -x ./src/**\* ./.git/**\* ./test/**\* ./node_modules/**\*')
+  system('zip -r build.zip . -x ./src/**\* ./.sass-cache/**\* ./.git/**\* ./test/**\* ./node_modules/**\*')
 end
 
 task watch: [:build] do
