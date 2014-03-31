@@ -12,7 +12,7 @@ class InjectTest < CapybaraTestCase
   end
 
   def assert_tweet_filtered(idx)
-    wait_until { all('.tweet')[idx].text == "#{@twitter_user[:screen_name]}'s tweet has been filtered. Show?" }
+    wait_until { all('#stream-items-id .tweet')[idx].text == "#{@twitter_user[:screen_name]}'s tweet has been filtered. Show?" }
   end
 
   def assert_tweet_not_filtered
@@ -58,7 +58,7 @@ class InjectTest < CapybaraTestCase
     click_show_tweet
     first('.js-action-del').click
     click('.delete-action')
-    assert_has_no_css('.tweet')
+    assert_tweet_filtered(0)
 
     # test that mentions and interactions page don't get filter applied
     send_keyboard_shortcut('gc')

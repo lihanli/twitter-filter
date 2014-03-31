@@ -206,7 +206,7 @@
     return function() {
       var path;
       path = location.pathname;
-      if (path === '/mentions' || path === '/i/connect') {
+      if (path === '/mentions' || path === '/i/notifications') {
         return;
       }
       addObserver();
