@@ -7,7 +7,7 @@ a {
   cursor: pointer; }
 
 .tweet .toggle-hide {
-  font-size: 12px;
+  font-size: 13px;
   color: #dddddd; }
 .tweet:hover .toggle-hide {
   color: #999999; }

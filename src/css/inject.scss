@@ -1,5 +1,6 @@
 .hidden-message {
   $height: 68px;
+
   height: $height;
   line-height: $height;
   margin-left: 58px;
@@ -11,7 +12,7 @@ a {
 
 .tweet {
   .toggle-hide {
-    font-size: 12px;
+    font-size: 13px;
     color: rgb(221, 221, 221);
   }
 
