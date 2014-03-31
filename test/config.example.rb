@@ -1,6 +1,6 @@
 CONFIG = {
   twitter: {
-    screen_name: 'dsjflksdf',
+    screen_name: 'josephk92264943',
     password: '',
   },
 }
