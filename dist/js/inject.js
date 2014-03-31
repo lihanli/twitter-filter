@@ -95,7 +95,7 @@
           $el: $this
         });
       }
-      return $this.find('.stream-item-header .time').after("<a class=\"toggle-hide tf-el\">\n  " + (tweet.hidden ? 'Unhide' : 'Hide') + "\n</a>");
+      return $this.find('.stream-item-header .time').after("<a class=\"toggle-hide tf-el\">" + (tweet.hidden ? 'Unhide' : 'Hide') + "</a>");
     });
     return _.each(toHide, function(hideObj) {
       var $el, replacement, tweet;

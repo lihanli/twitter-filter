@@ -6,7 +6,10 @@
 a {
   cursor: pointer; }
 
+.tweet small.time:after {
+  content: "\00b7"; }
 .tweet .toggle-hide {
+  margin-left: 5px;
   font-size: 13px;
   color: #dddddd; }
 .tweet:hover .toggle-hide {

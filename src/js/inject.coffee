@@ -75,9 +75,7 @@ filterTweets = (els) ->
         $el: $this
 
     $this.find('.stream-item-header .time').after("""
-      <a class="toggle-hide tf-el">
-        #{if tweet.hidden then 'Unhide' else 'Hide'}
-      </a>
+      <a class="toggle-hide tf-el">#{if tweet.hidden then 'Unhide' else 'Hide'}</a>
     """)
 
   _.each toHide, (hideObj) ->

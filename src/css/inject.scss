@@ -11,7 +11,12 @@ a {
 }
 
 .tweet {
+  small.time:after {
+    content: "\00b7";
+  }
+
   .toggle-hide {
+    margin-left: 5px;
     font-size: 13px;
     color: rgb(221, 221, 221);
   }
