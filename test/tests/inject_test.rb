@@ -7,6 +7,10 @@ class InjectTest < CapybaraTestCase
     @twitter_user = CONFIG[:twitter]
   end
 
+  def get_tweet_count
+    all_with_wait('.tweet').size
+  end
+
   def click_show_tweet(idx: 0)
     all_with_wait('.hidden-message')[idx].find('a').click
   end
@@ -15,16 +19,16 @@ class InjectTest < CapybaraTestCase
     wait_until { all('#stream-items-id .tweet')[idx].text == "#{@twitter_user[:screen_name]}'s tweet has been filtered. Show?" }
   end
 
-  def assert_tweet_not_filtered
-    wait_until { get_js("$($('.tweet:visible')[0]).text()").include?('@garfield hello') }
+  def assert_tweet_not_filtered(text: 'reply1')
+    wait_until { get_js("$($('.tweet:visible')[0]).text()").include?(text) }
   end
 
   def test
     visit_options_page
-    add_filtered_phrase('reply4')
+    add_filtered_phrase('sdfsdf')
     login_twitter(@twitter_user[:screen_name], @twitter_user[:password])
     visit_twitter
-    assert_tweet_filtered(1)
+    assert_tweet_filtered(0)
 
     visit_options_page
     remove_all_filters
@@ -34,25 +38,24 @@ class InjectTest < CapybaraTestCase
     # tweet filtered
     assert_tweet_filtered(0)
     click_show_tweet
-    assert_tweet_not_filtered
+    assert_tweet_not_filtered(text: 'sdfsdf')
 
-    # mutation observer will run filter on simple tweets
-    send_keyboard_shortcut('gh')
-    send_keyboard_shortcut('gp')
-    all('.tweet')[1].click
-    assert_has_css('.simple-tweet .tf-el')
+    # will filter simple tweets
+    visit("https://twitter.com/#{@twitter_user[:screen_name]}/status/475812223026475008")
+    assert_equal(true, first_with_wait('.simple-tweet').text.include?('filtered'))
     # mutation observer will filter expanded conversations
-    all('.tweet').each do |tweet|
-      next if has_class?(tweet, 'simple-tweet')
-      assert_text_include('filtered', tweet)
-    end
-
-    # make new tweet
     send_keyboard_shortcut('gh')
+    first('.uncollapse').click
+    sleep(0.5)
+    assert_tweet_filtered(0)
+    # make new tweet
+    refresh
+    tweet_count = get_tweet_count
     click('#global-new-tweet-button')
     has_css?('#tweet-box-global', visible: true)
     page.execute_script("jQuery('#tweet-box-global').text('zzzzz')")
     click('.tweet-action')
+    wait_until { get_tweet_count > tweet_count }
     assert_tweet_filtered(0)
 
     click_show_tweet
@@ -66,11 +69,10 @@ class InjectTest < CapybaraTestCase
     wait_for_new_url(all('.list-link').last)
     assert_has_no_css('.tf-el')
 
-    send_keyboard_shortcut('gp')
+    send_keyboard_shortcut('gh')
     # test that click handler still works after page change
-    sleep 1
     click_show_tweet
-    assert_tweet_not_filtered
+    assert_tweet_not_filtered(text: 'sdfsdf')
 
     lambda do
       toggle_hide_el = find('.toggle-hide')
@@ -87,15 +89,15 @@ class InjectTest < CapybaraTestCase
     # test hide mentions
     visit_options_page
     clear_filtered_users
-    add_filtered_user('garfield')
+    add_filtered_user('bigdildo')
     click('.hide-mentions-input')
 
-    visit("https://twitter.com/#{@twitter_user[:screen_name]}")
+    visit_twitter
     filtered_tweet = first('.tweet')
     assert_text_include('filtered', filtered_tweet)
 
     filtered_tweet.find('a').click
-    assert_text_include('@garfield', filtered_tweet)
+    assert_text_include('@bigdildo', filtered_tweet)
 
     # test hide completely
     visit_options_page

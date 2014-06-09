@@ -23,7 +23,7 @@ class CapybaraTestCase < MiniTest::Unit::TestCase
 
   def visit_options_page
     visit('chrome://extensions-frame/')
-    all('.options-link').last.click
+    all_with_wait('.options-link').last.click
 
     lambda do
       # get the url from new tab
@@ -68,7 +68,7 @@ class CapybaraTestCase < MiniTest::Unit::TestCase
   end
 
   def visit_twitter
-    visit("http://twitter.com/#{@twitter_user[:screen_name]}")
+    visit("https://twitter.com/")
   end
 
   def send_keyboard_shortcut(shortcut)
