@@ -34,6 +34,7 @@ class Tweet
     $el.data('tf-tweet')
 
 hasClass = (el, selector) ->
+  return false unless el? && el.classList?
   el.classList.contains(selector)
 
 filterCurrentPage = ->

@@ -55,6 +55,9 @@
   })();
 
   hasClass = function(el, selector) {
+    if (!((el != null) && (el.classList != null))) {
+      return false;
+    }
     return el.classList.contains(selector);
   };
 
