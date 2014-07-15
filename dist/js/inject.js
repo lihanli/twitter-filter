@@ -76,15 +76,15 @@
       if (module.length === 0) {
         return;
       }
-      module.removeClass('conversation-module');
+      module.addClass('tf-hidden');
       return _.each(CONVERSATION_CHILDREN, function(klass) {
         return module.find(klass).hide();
       });
     };
+    $('.tf-hidden').removeClass('tf-hidden');
     _.each(CONVERSATION_CHILDREN, function(klass) {
       return $els.find(klass).show();
     });
-    $els.parents('ol[data-ancestors]').addClass('conversation-module');
     $els.find('.tweet').each(function() {
       var $this, tweet;
       $this = $(this);
@@ -182,10 +182,15 @@
       if (observer) {
         observer.disconnect();
       }
-      observer = new MutationObserver(observerCallback);
-      return observer.observe(document.getElementsByClassName('stream-items')[0], {
-        childList: true,
-        subtree: true
+      return _.tap(document.getElementsByClassName('stream-items'), function(streamItemEls) {
+        if (streamItemEls.length === 0) {
+          return;
+        }
+        observer = new MutationObserver(observerCallback);
+        return observer.observe(streamItemEls[0], {
+          childList: true,
+          subtree: true
+        });
       });
     };
     addClickHandlers = function() {

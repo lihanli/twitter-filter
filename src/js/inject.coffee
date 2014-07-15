@@ -51,15 +51,15 @@ filterTweets = (els) ->
     # disable the entire conversation module
     module = $el.parents('ol.conversation-module')
     return if module.length == 0
-    module.removeClass('conversation-module')
+    module.addClass('tf-hidden')
 
     _.each CONVERSATION_CHILDREN, (klass) ->
       module.find(klass).hide()
 
   # remove previous changes
+  $('.tf-hidden').removeClass('tf-hidden')
   _.each CONVERSATION_CHILDREN, (klass) ->
     $els.find(klass).show()
-  $els.parents('ol[data-ancestors]').addClass('conversation-module')
 
   $els.find('.tweet').each ->
     $this = $(@)
@@ -148,10 +148,14 @@ setupPage = (->
 
   addObserver = ->
     observer.disconnect() if observer
-    observer = new MutationObserver(observerCallback)
-    observer.observe document.getElementsByClassName('stream-items')[0],
-      childList: true
-      subtree: true
+
+    _.tap document.getElementsByClassName('stream-items'), (streamItemEls) ->
+      return if streamItemEls.length == 0
+
+      observer = new MutationObserver(observerCallback)
+      observer.observe streamItemEls[0],
+        childList: true
+        subtree: true
 
   addClickHandlers = ->
     $('.stream-container').on 'click', '.tweet .toggle-hide', ->

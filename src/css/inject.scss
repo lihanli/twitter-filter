@@ -1,3 +1,8 @@
+.conversation-module.tf-hidden > li:after,
+.conversation-module.tf-hidden > li:before {
+  display: none !important;
+}
+
 .hidden-message {
   $height: 68px;
 
