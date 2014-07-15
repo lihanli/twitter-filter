@@ -1,6 +1,10 @@
-.conversation-module.tf-hidden > li:after,
-.conversation-module.tf-hidden > li:before {
-  display: none !important;
+.tf-hidden {
+  > li:after,
+  > li:before,
+  .conversation-header,
+  .missing-tweets-bar {
+    display: none !important;
+  }
 }
 
 .hidden-message {

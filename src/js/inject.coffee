@@ -1,5 +1,4 @@
 # can't cache dom elements because they become invalid when user changes pages
-CONVERSATION_CHILDREN = ['.missing-tweets-bar', '.conversation-header']
 filteredUsers = null
 filteredPhrases = null
 options = null
@@ -48,18 +47,10 @@ filterTweets = (els) ->
   hideCompletely = options.get('hideCompletely')
 
   removeConversationModule = ($el) ->
-    # disable the entire conversation module
-    module = $el.parents('ol.conversation-module')
-    return if module.length == 0
-    module.addClass('tf-hidden')
-
-    _.each CONVERSATION_CHILDREN, (klass) ->
-      module.find(klass).hide()
+    $el.parents('ol.conversation-module').addClass('tf-hidden')
 
   # remove previous changes
   $('.tf-hidden').removeClass('tf-hidden')
-  _.each CONVERSATION_CHILDREN, (klass) ->
-    $els.find(klass).show()
 
   $els.find('.tweet').each ->
     $this = $(@)

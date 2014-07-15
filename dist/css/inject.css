@@ -1,5 +1,7 @@
-.conversation-module.tf-hidden > li:after,
-.conversation-module.tf-hidden > li:before {
+.tf-hidden > li:after,
+.tf-hidden > li:before,
+.tf-hidden .conversation-header,
+.tf-hidden .missing-tweets-bar {
   display: none !important; }
 
 .hidden-message {
