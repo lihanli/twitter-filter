@@ -165,7 +165,7 @@ setupPage = (->
 
   ->
     path = location.pathname
-    return if path == '/mentions' || path == '/i/notifications'
+    return unless path == '/'
 
     addObserver()
     addClickHandlers()
