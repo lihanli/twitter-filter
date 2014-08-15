@@ -1,3 +1,2 @@
-Chrome extension for Twitter Filter  
-
-https://chrome.google.com/webstore/detail/twitter-filter/hfaokbpplplaeglmcpmjacghbnidjnll
+Now replaced by the mute function  
+https://support.twitter.com/articles/20171399-muting-users-on-twitter
